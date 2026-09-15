@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Lost & Found — o balcao dos achados e perdidos — Nº ano</title>
+<meta name="description" content="DESCREVER: o assunto, o ano, quantas folhas e de onde vieram as folhas de papel colhidas.">
+<!-- ============================================================
+     ESQUELETO DA FOLHA VIVA — a casca, sem conteúdo nenhum.
+
+     ⭐ POR QUE ELE EXISTE (pergunta do Marcos, 15/set/2026): *"mas por que você
+     está clonando? Não é melhor colher as atividades da internet com o crivo e
+     criar as interatividades que são pedidas, sem clonar?"*
+     Ele estava certo sobre o problema. As INTERATIVIDADES nunca foram clonadas
+     — o gesto sai do comando impresso na folha de papel. O que se clonava era o
+     MOTOR, e junto com ele vinha o CONTEÚDO do caderno de origem: os objetivos
+     do relatório, a citação do currículo, o sorteio das folhas, o prefixo das
+     figuras, o `var LIGAR`. Na Fábrica de Nomes, CINCO das nove reprovações
+     foram exatamente isso, e nenhuma tinha a ver com substantivos.
+     Aqui não há o que esquecer de trocar, porque não há nada de ninguém dentro.
+
+     ⚠️ NÃO SE COPIA ESTA PASTA À MÃO: use
+        `bash _padrao/nova_folha_viva.sh <pasta> <prefixo> "<Título>"`,
+        que carimba o prefixo em todos os lugares de uma vez e roda o pré-voo.
+
+     O QUE JÁ VEM PRONTO, e não se reescreve: navegação e progresso, voz com
+     alto-falante em tudo, o teclado de letras nas duas portas (tela e teclado de
+     verdade), arrastar com mouse/dedo/caneta, gavetas, ligar, cruzadinha,
+     boletim da criança, relatório do professor pela medalha, dossiê pedagógico,
+     "continuar de onde parou" por 55 minutos, a chave 1275@ e o aviso ao
+     controle da sala quando a criança termina.
+
+     O QUE SE PREENCHE, e está marcado: GESTOS · ITENS · DADOS · NOMES ·
+     CURRICULO · novaFolha() · OBJETIVOS (no folhas.js) · as folhas f01..fN.
+
+     ES5 puro, um arquivo (mais o `folhas.js` ao lado), sem biblioteca.
+     ============================================================ -->
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+:root{
+  /* os tokens de cor da folha viva — sem eles o portão `_qa/cor_fixa.py` reprova
+     cor de texto cravada, que num tema diferente vira letra invisível */
+  --texto:#26201c;
+  --texto2:#3a2f27;
+  --texto3:#4a3d33;
+  /* a cor deste caderno é a TELHA: ele é sobre casas */
+  --cor:#b0562a;
+  --cor2:#8d4120;
+  --corclara:#fdf1e9;
+}
+body{font-family:"Segoe UI",Arial,sans-serif;background:#f4efe9;color:var(--texto);padding-bottom:160px}
+#topo{position:-webkit-sticky;position:sticky;top:0;z-index:20;background:#fff;border-bottom:3px solid var(--cor);
+  box-shadow:0 2px 14px rgba(70,40,20,.13);padding:8px 10px;display:flex;align-items:center;gap:10px;max-width:880px;margin:0 auto}
+#topo .tit{font-weight:800;font-size:15px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog{height:12px;background:#eee3d9;border-radius:8px;overflow:hidden;flex:1;min-width:60px;max-width:200px}
+.prog i{display:block;height:100%;width:0;background:var(--cor);border-radius:8px;-webkit-transition:width .5s;transition:width .5s}
+.pg{font-weight:800;font-size:14px;color:var(--cor2);white-space:nowrap}
+button{font-family:inherit;cursor:pointer}
+.bt{min-width:48px;min-height:48px;border:0;border-radius:16px;background:var(--cor);color:#fff;font-weight:800;font-size:17px;
+  padding:10px 18px;box-shadow:0 4px 0 var(--cor2);-webkit-transition:transform .08s;transition:transform .08s}
+.bt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--cor2)}
+.bt[disabled]{opacity:.45;cursor:default;box-shadow:none}
+.bt.cinza{background:#eae2da;color:#57493f;box-shadow:0 4px 0 #cdc0b4}
+.bt.verde{background:#15a34a;box-shadow:0 4px 0 #0d7736}
+.zap{width:42px;height:42px;border-radius:50%;border:0;background:var(--cor);box-shadow:0 3px 0 var(--cor2);
+  display:inline-flex;align-items:center;justify-content:center;padding:0;flex:none}
+.zap svg{width:22px;height:22px;fill:#fff}
+.zap.off{background:#c2b6ab;box-shadow:0 3px 0 #a3968b}
+.zap.ouvir{background:#fff;box-shadow:0 3px 0 #ddd0c4;border:2px solid var(--cor)}
+.zap.ouvir svg{fill:var(--cor)}
+.zap.ouvir.tocando{-webkit-animation:pulsa 1s infinite;animation:pulsa 1s infinite}
+@-webkit-keyframes pulsa{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+@keyframes pulsa{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+
+#livro{max-width:880px;margin:12px auto 0;padding:0 10px}
+.pagina{position:relative;background:#fff;border-radius:22px;box-shadow:0 10px 34px rgba(70,40,20,.16);display:none;overflow:hidden;padding:0 0 20px}
+.pagina.viva{display:block;-webkit-animation:entra .35s ease-out;animation:entra .35s ease-out}
+@-webkit-keyframes entra{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes entra{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.faixa{background:var(--cor);color:#fff;padding:15px 18px 13px;display:flex;align-items:center;gap:12px}
+.faixa h2{margin:0;font-size:clamp(17px,4.4vw,25px);letter-spacing:.4px;text-transform:uppercase;flex:1;line-height:1.1}
+.faixa .num{background:#fff;color:var(--cor);font-weight:900;border-radius:50%;width:36px;height:36px;display:flex;
+  align-items:center;justify-content:center;font-size:18px;flex:none}
+/* uma cor por BLOCO da escada — a criança vê que mudou de assunto */
+.pagina.c1 .faixa{background:#b0562a}.pagina.c1 .faixa .num{color:#b0562a}
+.pagina.c2 .faixa{background:#1179bf}.pagina.c2 .faixa .num{color:#1179bf}
+.pagina.c3 .faixa{background:#15803d}.pagina.c3 .faixa .num{color:#15803d}
+.pagina.c4 .faixa{background:#8b5cf6}.pagina.c4 .faixa .num{color:#8b5cf6}
+.pagina.c5 .faixa{background:#b45309}.pagina.c5 .faixa .num{color:#b45309}
+.enun{margin:14px 16px 4px;font-size:clamp(15px,3.9vw,19px);font-weight:700;line-height:1.35}
+.enun b{color:var(--cor2)}
+
+.item{margin:12px 14px;padding:14px;border:2px solid #f0e6dd;border-radius:20px;background:#fffdfb}
+.item.feito{border-color:#bfe6ce;background:#f3fcf6}
+.item .n{font-weight:900;color:#b3a294;font-size:15px;margin-right:8px}
+/* ⚠️ A FIGURA TEM ALTURA FIXA: com `height:auto` cada figura entrava no seu
+   tamanho natural (o prédio com 230 px e o tijolo com 90) e, como `display:block`
+   ignora o `text-align:center` do pai, todas encostavam na esquerda. */
+.fig{display:block;width:auto;height:clamp(76px,19vw,116px);max-width:100%;
+  margin:2px auto 6px;object-fit:contain;image-rendering:auto}
+.figgrande{display:block;width:auto;height:clamp(84px,21vw,128px);max-width:100%;
+  margin:0 auto;object-fit:contain}
+.figbt{border:0;background:none;padding:4px;border-radius:16px;min-width:48px;min-height:48px}
+/* ⚠️ O ALTO-FALANTE É DESENHADO EM CSS — caixinha + triângulo + duas ondas de
+   borda arredondada. Nada de emoji (vira quadradinho nos PCs da escola) e nada
+   de SVG solto (ordem do Marcos, set/2026). */
+.som{position:relative;width:46px;height:46px;min-width:46px;border:3px solid var(--cor);
+  border-radius:50%;background:var(--corclara);padding:0;cursor:pointer;flex:none}
+.som:active{-webkit-transform:scale(.93);transform:scale(.93)}
+.som .cone{position:absolute;left:12px;top:17px;width:7px;height:10px;background:var(--cor2);
+  border-radius:2px 0 0 2px}
+.som .cone:after{content:"";position:absolute;left:6px;top:-6px;width:0;height:0;
+  border-top:11px solid transparent;border-bottom:11px solid transparent;
+  border-right:11px solid var(--cor2)}
+.som .onda{position:absolute;border:3px solid var(--cor2);border-left-color:transparent;
+  border-top-color:transparent;border-bottom-color:transparent;border-radius:50%}
+.som .o1{left:26px;top:16px;width:8px;height:12px}
+.som .o2{left:29px;top:11px;width:13px;height:22px;opacity:.65}
+.enunlin{display:flex;align-items:center;gap:10px;margin:0 2px}
+.enunlin .enun{flex:1;min-width:0}
+
+/* fileira genérica de opções */
+.ops{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
+.op{min-width:64px;min-height:56px;border:3px solid #e6dbd1;border-radius:16px;background:#fff;color:var(--texto);
+  font-weight:900;font-size:20px;padding:8px 14px;-webkit-transition:transform .1s;transition:transform .1s}
+.op:active{transform:scale(.94)}
+.op.certa{border-color:#15a34a;background:#e7f8ee;color:#0d7736}
+.op.erro{border-color:#e0562f;background:#fdeee9}
+/* a opção que é uma FRASE (a definição, o porquê): texto corrido, alinhado à
+   esquerda, largura cheia — frase centralizada em caixinha não se lê */
+.op.frase{display:block;width:100%;max-width:420px;text-align:left;font-size:clamp(14px,3.7vw,17px);
+  font-weight:700;line-height:1.35;letter-spacing:0;min-height:52px}
+.op.curta{font-size:clamp(15px,4vw,19px);letter-spacing:.5px}
+/* a opção COM figura */
+.op.figbt{display:flex;flex-direction:column;align-items:center;gap:3px;
+  min-width:96px;min-height:112px;padding:8px 10px}
+.op.figbt .figop{display:block;width:auto;height:clamp(56px,14vw,80px);max-width:100%;object-fit:contain}
+.rotop{font-weight:800;font-size:clamp(11px,2.9vw,13px);color:var(--texto2);letter-spacing:.4px;
+  line-height:1.1;word-break:break-word}
+/* ⚠️ A LEGENDA SECRETA. `visibility` e não `display`: o espaço fica guardado,
+   então a folha não pula quando a palavra aparece no acerto. */
+.segredo{visibility:hidden}
+.segredo.revelado{visibility:visible;-webkit-animation:aparece .35s;animation:aparece .35s}
+@-webkit-keyframes aparece{from{opacity:0}to{opacity:1}}
+@keyframes aparece{from{opacity:0}to{opacity:1}}
+.figsil{display:flex;flex-direction:column;align-items:center;gap:4px;margin:2px 0 6px}
+.chamlin{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.chamlin b{font-size:clamp(15px,4vw,19px);color:var(--texto2);letter-spacing:.5px}
+
+/* ---- marcar VÁRIAS certas (folha 1, da d18: "marque com x as corretas") ---- */
+.marcax{display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:10px}
+.lx{display:flex;align-items:center;gap:12px;min-height:56px;border:3px solid #e6dbd1;border-radius:16px;
+  background:#fff;padding:8px 14px;font-weight:700;font-size:clamp(14px,3.7vw,17px);color:var(--texto);
+  width:100%;max-width:430px;text-align:left;line-height:1.3}
+.lx .cx{width:34px;height:34px;border:3px solid #b3a294;border-radius:8px;display:inline-flex;align-items:center;
+  justify-content:center;font-size:24px;font-weight:900;color:var(--cor);flex:none}
+.lx.marcada{border-color:var(--cor);background:var(--corclara)}
+.lx.marcada .cx{border-color:var(--cor)}
+.lx.certa{border-color:#15a34a;background:#e7f8ee}
+.lx.certa .cx{border-color:#15a34a;color:#15a34a}
+.lx.errada{border-color:#e0562f;background:#fdeee9}
+
+.alvonome.cheia{border-style:solid;border-color:#15a34a;background:#e7f8ee;color:#0d7736}
+.banconome{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 10px 10px}
+.etiq{min-height:46px;padding:8px 14px;border:3px dashed #e6dbd1;border-radius:12px;background:#fff;
+  font-weight:900;font-size:clamp(13px,3.6vw,17px);color:var(--texto3);cursor:pointer;letter-spacing:.5px;
+  -ms-touch-action:none;touch-action:none}
+.etiq.marcada{border-style:solid;border-color:var(--cor);background:var(--corclara)}
+.etiq.usada{opacity:.32;pointer-events:none;border-style:solid}
+.etiq.puxada{opacity:.35}
+
+/* ---- juntar as sílabas numeradas (folha 5, da d18 item 4) ---- */
+.tabsil{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:8px 10px 6px}
+.tsc{border:2px solid #e6dbd1;border-radius:10px;background:#fff;text-align:center;padding:5px 2px;
+  min-height:46px;display:flex;flex-direction:column;justify-content:center;cursor:pointer}
+.tsc .tsn{font-size:11px;font-weight:800;color:#b3a294;display:block;line-height:1}
+/* ⚠️ tinta PRÓPRIA, não o token do fundo da atividade: a célula pinta o
+   próprio fundo, então quem decide a cor da letra é ela (portão 4c). */
+.tsc .tss{font-size:clamp(13px,3.6vw,18px);font-weight:900;color:#4a3d33;display:block;letter-spacing:.5px}
+.tsc.usada{background:var(--corclara);border-color:var(--cor)}
+.tsc:active{-webkit-transform:scale(.94);transform:scale(.94)}
+.montada{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;min-height:52px;align-items:center;margin:6px 0}
+.mped{font-weight:900;font-size:clamp(17px,4.6vw,24px);color:#0d7736;background:#e7f8ee;border:2px solid #15a34a;
+  border-radius:10px;padding:6px 10px;display:block}
+.montada .vazio{font-weight:900;color:#c9bcb0;font-size:clamp(15px,4vw,19px)}
+
+/* ---- ligar (folhas 8 e 22) ---- */
+.ligar{position:relative;display:flex;gap:clamp(30px,10vw,96px);justify-content:space-between;margin:14px 6px}
+.ligar .col{display:flex;flex-direction:column;gap:14px;flex:1 1 0;min-width:0}
+.linhas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.ponta{border:3px solid #e6dbd1;border-radius:16px;background:#fff;height:92px;display:flex;align-items:center;
+  justify-content:center;font-weight:900;font-size:clamp(13px,3.4vw,17px);letter-spacing:.4px;padding:6px;
+  text-align:center;line-height:1.15;color:var(--texto2);
+  -ms-touch-action:none;touch-action:none;-webkit-transition:border-color .15s,box-shadow .15s;
+  transition:border-color .15s,box-shadow .15s}
+.ponta img{width:auto;height:70px;max-width:100%;object-fit:contain}
+@media (max-width:420px){ .ponta{height:78px} .ponta img{height:58px} }
+.ponta.marcada{border-color:var(--cor);box-shadow:0 0 0 4px rgba(176,86,42,.22)}
+.ponta.feita{border-color:#15a34a;background:#e7f8ee}
+.ponta.mostra{border-color:#f0b64a;box-shadow:0 0 0 4px rgba(240,182,74,.4)}
+.ponta.treme{-webkit-animation:treme .4s;animation:treme .4s}
+@-webkit-keyframes treme{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes treme{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* ---- caça-palavras dos materiais (folha 9, da d02) ---- */
+.diagrama{display:grid;gap:2px;margin:8px auto 4px;max-width:430px;touch-action:none;
+  -webkit-user-select:none;user-select:none}
+.dcel{min-width:0;aspect-ratio:1/1;min-height:30px;border:1px solid #eee0d4;border-radius:6px;background:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:900;
+  font-size:clamp(11px,3.1vw,16px);color:var(--texto3);cursor:pointer;padding:0}
+.dcel.tracando{background:#ffe9d6;border-color:var(--cor)}
+.dcel.achada{background:#e7f8ee;border-color:#15a34a;color:#0d7736}
+.listamat{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:6px 10px 4px}
+.pmat{font-weight:900;font-size:clamp(12px,3.3vw,15px);color:var(--texto3);border:2px solid #e6dbd1;
+  border-radius:10px;padding:5px 10px;background:#fff;letter-spacing:.5px}
+.pmat.achada{border-color:#15a34a;background:#e7f8ee;color:#0d7736;text-decoration:line-through}
+
+/* ---- classificar em colunas: lugares (11), vistas (19), cômodos (23) ---- */
+.colunas{display:flex;gap:clamp(4px,1.6vw,10px);justify-content:center;margin:8px 8px 4px;flex-wrap:wrap}
+.coluna{flex:1 1 28%;min-width:96px;max-width:200px;border:3px solid #e6dbd1;border-radius:14px;
+  background:#fffdfb;padding:5px;min-height:112px;cursor:pointer}
+.coluna.perto{border-color:var(--cor);background:var(--corclara)}
+.coluna.erro{border-color:#e0562f;background:#fdeee9}
+.ctit{font-weight:900;font-size:clamp(12px,3.2vw,15px);color:var(--texto2);margin-bottom:4px;
+  border-bottom:2px solid #f0e6dd;padding-bottom:3px;display:flex;align-items:center;
+  justify-content:center;gap:4px;flex-wrap:wrap;text-align:center;line-height:1.1}
+.ctit .figmini{height:clamp(30px,7vw,40px)}
+.cdentro{display:flex;flex-direction:column;gap:3px;align-items:center;min-height:56px}
+.fdentro{font-weight:800;font-size:clamp(11px,3vw,14px);color:#0d7736;background:#e7f8ee;
+  border-radius:8px;padding:3px 6px;display:block;max-width:100%;word-break:break-word;text-align:center}
+.figmini{width:auto;height:clamp(34px,8vw,44px);max-width:100%;object-fit:contain;display:block}
+.figbanco{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 10px 10px}
+.op.fig{padding:6px;min-width:96px;min-height:96px}
+.op.fig .figmini{height:clamp(48px,12vw,64px)}
+.op.fig.marcada{border-color:var(--cor);background:var(--corclara);
+  -webkit-box-shadow:0 0 0 4px rgba(176,86,42,.18);box-shadow:0 0 0 4px rgba(176,86,42,.18)}
+.op.fig.usada{opacity:.3;pointer-events:none}
+
+/* ---- completar a lacuna (folha 15, da d23) ---- */
+.frasel{font-size:clamp(15px,4vw,19px);font-weight:700;color:var(--texto2);line-height:1.7;
+  text-align:center;margin:4px 6px 8px}
+.lacuna{display:inline-block;min-width:96px;padding:2px 10px;border-bottom:4px solid var(--cor);
+  color:var(--cor);font-weight:900;text-align:center}
+.lacuna.cheia{border-bottom-color:#1f9d55;color:#1f9d55;background:#eafaf0;border-radius:8px 8px 0 0}
+
+/* ---- cruzadinha (folha 16, da d08 reescrita) ---- */
+.cruzenv{overflow-x:auto;margin:8px 0 4px}
+.cruz{display:grid;gap:2px;margin:0 auto;width:-webkit-max-content;width:max-content}
+.ccel{width:clamp(26px,7vw,34px);height:clamp(26px,7vw,34px);border:0;background:transparent;padding:0}
+.ccel.viva{border:2px solid #d9c9bb;border-radius:5px;background:#fff;font-weight:900;
+  font-size:clamp(13px,3.6vw,18px);color:var(--texto3);cursor:pointer;position:relative}
+.ccel.viva.ativa{border-color:var(--cor);background:var(--corclara);
+  -webkit-box-shadow:0 0 0 3px rgba(176,86,42,.25);box-shadow:0 0 0 3px rgba(176,86,42,.25)}
+.ccel.viva.ok{border-color:#15a34a;background:#e7f8ee;color:#0d7736}
+.ccel .cn{position:absolute;left:1px;top:0;font-size:9px;font-weight:800;color:#b3a294;line-height:1}
+.pistas{display:flex;flex-direction:column;gap:6px;margin:8px 12px 4px}
+.pista{display:flex;align-items:center;gap:8px;border:2px solid #f0e6dd;border-radius:12px;background:#fffdfb;
+  padding:6px 10px;min-height:48px;font-size:clamp(13px,3.5vw,16px);font-weight:600;color:var(--texto2);
+  line-height:1.3;cursor:pointer;text-align:left;width:100%}
+.pista .pn{font-weight:900;color:var(--cor);flex:none;min-width:18px}
+.pista.feita{border-color:#15a34a;background:#f3fcf6}
+.pista.ativa{border-color:var(--cor);background:var(--corclara)}
+
+/* ---- a imagem aérea com pontos (folha 18) ---- */
+.colho{text-align:center;margin:2px 0 4px;min-height:80px}
+.credito{font-size:11px;line-height:1.35;color:#6b5347;margin:6px 2px 0;text-align:center}
+.figolho{max-height:76px;width:auto;display:inline-block}
+.aerea{position:relative;max-width:520px;margin:8px auto 4px;width:100%}
+.aerea img{display:block;width:100%;height:auto;border-radius:16px;border:3px solid #e6dbd1}
+/* ⚠️ O ALVO DA FOLHA 18 É INVISÍVEL ATÉ SER ACHADO, e isso é a folha inteira.
+   A primeira versão pintava cada ponto com um anel branco por cima do desenho.
+   Com três alvos já era discutível; com os dezessete da praça (uma fonte,
+   quatro bancos, dez árvores e dois bebedouros) a figura virou um campo de
+   bolhas — a criança tocava em qualquer anel e acertava sem OLHAR a praça, que
+   é justamente o que a folha existe para medir. Agora o botão é só uma área de
+   toque transparente do tamanho do dedo (52px, acima do piso de 44), e o anel
+   verde só nasce quando ela acha. Achado por FOTO, 13/set/2026 — nenhum portão
+   via, porque todos os alvos estavam lá, do tamanho certo, funcionando. */
+.ponto{position:absolute;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;
+  border:3px solid transparent;background:transparent;cursor:pointer;padding:0}
+.ponto.certo{background:rgba(21,163,74,.55);border-color:#0d7736;
+  -webkit-box-shadow:0 2px 8px rgba(0,0,0,.3);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.ponto.errado{background:rgba(224,86,47,.5);border-color:#fff}
+.ponto:active{-webkit-transform:scale(.9);transform:scale(.9)}
+/* teclado: quem navega por TAB precisa ver onde está */
+.ponto:focus{outline:3px solid #fff;outline-offset:-3px}
+
+/* ---- ordenar as cenas / o antes e o hoje (folhas 20 e 21) ---- */
+.trilhaord{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 6px 4px}
+.slot{width:clamp(84px,23vw,124px);min-height:clamp(84px,23vw,124px);border:3px dashed var(--cor);
+  border-radius:16px;background:var(--corclara);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;font-weight:900;font-size:20px;color:var(--cor2);padding:4px}
+.slot .figmini{height:clamp(56px,15vw,86px)}
+.slot.perto{border-style:solid;border-color:#15a34a;background:#e7f8ee}
+.slot.cheia{border-style:solid;border-color:#15a34a;background:#e7f8ee}
+.slot .rot{font-size:clamp(10px,2.7vw,12px);font-weight:800;color:#0d7736;line-height:1.05;text-align:center}
+.sn{font-size:12px;font-weight:900;color:var(--cor2);display:block}
+
+/* ---- achar as casas dentro do poema (folha 24, da d19) ---- */
+.poema{font-size:clamp(15px,4vw,19px);line-height:1.9;text-align:center;color:var(--texto2);
+  font-weight:600;margin:8px 12px 4px}
+.poema .aut{display:block;font-size:13px;font-weight:800;color:#8a7768;margin-top:6px}
+.pw{display:inline-block;border:0;background:transparent;font:inherit;color:inherit;padding:2px 6px;
+  border-radius:8px;cursor:pointer;min-height:44px;line-height:1.4}
+.pw.achada{background:#ffe9a8;color:#6a4b00;font-weight:900;-webkit-box-shadow:0 0 0 2px #e5b93c;
+  box-shadow:0 0 0 2px #e5b93c}
+.pw.nao{-webkit-animation:treme .34s;animation:treme .34s}
+.placar{font-weight:900;color:var(--cor2);text-align:center;font-size:15px;margin:4px 0}
+
+/* ---- o mural da rua do mundo (folha 25) ---- */
+.mural{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:8px 10px}
+.cartaocasa{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:118px;min-width:104px;
+  padding:8px 10px;border:3px solid #e6dbd1;border-radius:20px;background:#fff;cursor:pointer;
+  -webkit-transition:transform .18s,border-color .18s,background .18s;
+  transition:transform .18s,border-color .18s,background .18s}
+.cartaocasa .figop{display:block;width:auto;height:clamp(52px,13vw,72px);max-width:100%;object-fit:contain}
+.cartaocasa.escolhido{border-color:#15a34a;background:#eafaf0;-webkit-transform:scale(1.03);transform:scale(1.03)}
+.cartaocasa:focus-visible{outline:3px solid #f0b64a;outline-offset:2px}
+.rua{display:flex;gap:2px;justify-content:center;align-items:flex-end;flex-wrap:wrap;
+  border-bottom:8px solid #7b6a5c;margin:10px 12px 4px;padding-bottom:2px;min-height:60px}
+.rua img{height:clamp(44px,12vw,68px);width:auto;object-fit:contain;display:block}
+
+/* ---- carimbo, nav, capa, fim ---- */
+.carimbo{position:absolute;right:14px;top:60px;transform:rotate(-14deg) scale(.4);opacity:0;color:#15a34a;
+  border:5px solid #15a34a;border-radius:14px;padding:6px 14px;font-weight:900;font-size:20px;text-align:center;
+  line-height:1.05;pointer-events:none;-webkit-transition:all .45s;transition:all .45s}
+.pagina.pronta .carimbo{opacity:.92;transform:rotate(-14deg) scale(1)}
+#nav{position:fixed;left:0;right:0;bottom:0;z-index:18;background:#fff;border-top:3px solid var(--cor);padding:8px 10px;
+  display:none;align-items:center;gap:10px;box-shadow:0 -3px 14px rgba(70,40,20,.14)}
+/* ⚠️ ACHADO NA FOTO, não em portão nenhum (13/set/2026): com um título
+   comprido ("Ache os materiais no diagrama") esta linha quebrava em QUATRO
+   e espremia "Anterior", "Terminar" e "Próxima" contra as bordas — e
+   "construção" ainda estourava para fora. O nome da folha já está na faixa
+   colorida do topo da página, então na tela estreita ele some daqui. */
+#nav .txt{flex:1;text-align:center;font-weight:800;color:var(--cor2);font-size:14px;
+  min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:560px){ #nav .txt{display:none} }
+/* ⭐ o botão de terminar a qualquer momento: discreto de propósito — ele existe
+   para o sinal da escola, não para tentar a criança a pular tudo */
+.bt.terminar{background:#f3ece5;color:#6b5a4d;border:2px solid #e2d6ca;
+  font-size:12px;padding:8px 10px;min-height:44px;font-weight:800;flex:0 0 auto}
+.bt.terminar:active{background:#e9dfd5}
+.barra.naoabriu{opacity:.5}
+.barra.naoabriu b{font-weight:700;font-size:12px;color:#9c8b7c}
+#barraCapa{position:fixed;left:0;right:0;bottom:0;z-index:19;background:#fff;border-top:3px solid var(--cor);padding:10px;display:none}
+#barraCapa.aberta{display:block}
+#barraCapa .lin{display:flex;gap:10px;align-items:center;max-width:640px;margin:0 auto}
+#barraCapa label{font-weight:800;color:var(--cor2);font-size:15px;white-space:nowrap}
+#nomeIn{flex:1;min-width:0;min-height:50px;border:3px solid var(--cor);border-radius:14px;padding:0 12px;
+  font-family:"Comic Sans MS","Chalkboard SE","Segoe Print",cursive;font-weight:700;font-size:22px;color:#1d4ed8;background:#fff}
+#nomeIn:focus{outline:none;border-color:#1179bf;box-shadow:0 0 0 4px rgba(17,121,191,.25)}
+
+/* ================= A CAPA =================
+   O tema sai do nome: uma RUA onde as casas do mundo inteiro são vizinhas.
+   O céu com o sol, a fileira de casas subindo uma depois da outra e a calçada
+   embaixo. Só CSS e PNG: nada de SVG, nada de emoji. */
+.capa{position:relative;text-align:center;padding:18px 16px 24px;overflow:hidden;
+  background:-webkit-linear-gradient(top,#cbe7f7 0%,#fdf3ea 62%,#fff 100%);
+  background:linear-gradient(180deg,#cbe7f7 0%,#fdf3ea 62%,#fff 100%)}
+.capa .ceu{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none;overflow:hidden}
+.capa .nv{position:absolute;display:block;border-radius:50%;
+  background:-webkit-radial-gradient(circle,rgba(255,255,255,.85),rgba(255,255,255,0) 70%);
+  background:radial-gradient(circle,rgba(255,255,255,.85),rgba(255,255,255,0) 70%)}
+.capa .n1{width:220px;height:130px;left:-40px;top:14px}
+.capa .n2{width:280px;height:150px;right:-70px;top:44px}
+.capa .n3{width:170px;height:110px;left:46%;top:6px}
+.capa .sol{position:absolute;right:22px;top:16px;width:56px;height:56px;border-radius:50%;
+  background:-webkit-radial-gradient(circle at 40% 38%,#fff2b8,#f5b301);
+  background:radial-gradient(circle at 40% 38%,#fff2b8,#f5b301);
+  box-shadow:0 0 26px rgba(245,179,1,.55)}
+/* ⚠️ O SOL TAPAVA O SUBTÍTULO (achado na foto). O `.ceu` vem antes no HTML,
+   mas os filhos dele são absolutos — e elemento posicionado pinta POR CIMA
+   de irmão não posicionado, mesmo vindo antes. O conserto é levantar o
+   conteúdo, não abaixar o céu. */
+.capa .titu,.capa .sub,.capa .esteira,.capa .chamada{position:relative;z-index:1}
+.capa .chapeu{position:relative;z-index:1;width:66px;height:66px;margin:16px auto 2px;border-radius:16px;
+  background:-webkit-linear-gradient(top left,#d2703c,#8d4120);
+  background:linear-gradient(135deg,#d2703c,#8d4120);color:#fff;font-weight:900;font-size:34px;
+  line-height:66px;box-shadow:0 8px 18px rgba(141,65,32,.36)}
+.capa .chapeu:before{content:"";position:absolute;left:-9px;right:-9px;top:-15px;height:0;
+  border-left:42px solid transparent;border-right:42px solid transparent;border-bottom:18px solid #a33d1e}
+.capa h1.titu{margin:12px 0 4px;line-height:1;display:flex;flex-wrap:wrap;justify-content:center;gap:2px}
+.capa .titu .lt{display:inline-block;font-size:clamp(24px,6.4vw,42px);font-weight:900;letter-spacing:0;
+  color:#8d4120;text-shadow:0 3px 0 #f6dcc8,0 5px 10px rgba(120,60,25,.2);
+  -webkit-animation:caiCasa .5s both;animation:caiCasa .5s both}
+.capa .titu .esp{display:inline-block;width:14px}
+/* ⚠️ `caiCasa` e não `cai`: o confete já tem um `@keyframes cai` que termina em
+   `opacity:0`. Nome de keyframe é global — numa outra capa desta casa a colisão
+   apagou o título inteiro, em silêncio. */
+@-webkit-keyframes caiCasa{from{opacity:0;-webkit-transform:translateY(-26px) rotate(-8deg)}to{opacity:1;-webkit-transform:none}}
+@keyframes caiCasa{from{opacity:0;transform:translateY(-26px) rotate(-8deg)}to{opacity:1;transform:none}}
+.capa .sub{font-weight:700;color:#8d4120;font-size:clamp(13px,3.6vw,18px);margin:6px 0 4px}
+.capa .esteira{max-width:660px;margin:16px auto 4px;position:relative}
+.capa .cena{display:flex;justify-content:center;align-items:flex-end;gap:6px;flex-wrap:nowrap}
+.capa .cena img{width:clamp(46px,13vw,96px);height:clamp(46px,13vw,96px);object-fit:contain;
+  -webkit-animation:sobeCasa 2.6s ease-in-out infinite;animation:sobeCasa 2.6s ease-in-out infinite}
+.capa .cena img:nth-child(2){-webkit-animation-delay:.35s;animation-delay:.35s}
+.capa .cena img:nth-child(3){-webkit-animation-delay:.7s;animation-delay:.7s}
+.capa .cena img:nth-child(4){-webkit-animation-delay:1.05s;animation-delay:1.05s}
+.capa .cena img:nth-child(5){-webkit-animation-delay:1.4s;animation-delay:1.4s}
+@-webkit-keyframes sobeCasa{0%,100%{-webkit-transform:translateY(0)}50%{-webkit-transform:translateY(-7px)}}
+@keyframes sobeCasa{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.capa .cinta{display:flex;gap:6px;justify-content:center;background:#7b6a5c;border-radius:9px;
+  padding:6px 8px;margin-top:6px;box-shadow:0 6px 14px rgba(70,40,20,.22)}
+.capa .cinta i{display:block;width:26px;height:9px;background:#cbb9a8;border-radius:5px}
+.capa .chamada{margin-top:14px;font-weight:700;color:#5c4c40;font-size:clamp(13px,3.4vw,16px)}
+@media (prefers-reduced-motion: reduce){
+  .capa .titu .lt,.capa .cena img{-webkit-animation:none;animation:none}
+}
+
+#fim,#retomar{display:none;max-width:880px;margin:12px auto;background:#fff;border-radius:22px;padding:20px 16px;
+  box-shadow:0 10px 34px rgba(70,40,20,.16);text-align:center}
+#fim h2{margin:0 0 6px;color:var(--cor2);font-size:clamp(21px,5.5vw,30px)}
+.estrelas{font-size:44px;letter-spacing:8px;margin:6px 0}
+.barras{max-width:520px;margin:10px auto;text-align:left}
+.barra{display:flex;align-items:center;gap:8px;margin:6px 0;font-weight:700;font-size:14px}
+.barra span{flex:0 0 42%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.barra .tr{flex:1;height:14px;background:#eee3d9;border-radius:8px;overflow:hidden}
+.barra .tr i{display:block;height:100%;width:0;background:#15a34a;-webkit-transition:width .8s;transition:width .8s}
+.barra b{flex:none;color:var(--cor2)}
+/* ⚠️ SEM EMOJI E SEM SVG na tela da criança: nos PCs da escola o emoji vira
+   quadradinho vazio, e a criança de sete anos não sabe o que é um quadradinho.
+   Troféu e selos são PNG; as setas são triângulos de CSS puro. */
+#medalha{width:132px;height:132px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ffe680,#e0a800);
+  margin:14px auto;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 22px rgba(180,140,0,.42);cursor:pointer;-ms-touch-action:none;touch-action:none}
+#medalha img{width:92px;height:92px;object-fit:contain;display:block;pointer-events:none}
+#medalha.semfig:after{content:"BOA!";font-weight:900;font-size:26px;color:#7a5600}
+.seta{display:inline-block;width:0;height:0;vertical-align:middle;
+  border-top:8px solid transparent;border-bottom:8px solid transparent}
+.seta.esq{border-right:11px solid currentColor;margin-right:7px}
+.seta.dir{border-left:11px solid currentColor;margin-left:7px}
+#estrelas img{width:52px;height:52px;object-fit:contain;display:inline-block;margin:0 3px;vertical-align:middle}
+
+#relatorio{display:none;text-align:left;background:#fbf7f3;border:2px solid #e6dbd1;border-radius:16px;padding:12px;margin-top:12px;font-size:13px}
+#relatorio table{border-collapse:collapse;width:100%;margin-top:8px}
+#relatorio th,#relatorio td{border:1px solid #e6dbd1;padding:5px 7px;text-align:left}
+#relatorio th{background:#f4ebe3}
+#relatorio table th:nth-child(4),#relatorio table td:nth-child(4){background:#f3fbf5}
+#relatorio .parecer{margin:10px 0 4px;padding:10px 12px;border-left:5px solid var(--cor);
+  background:#fff;border-radius:0 12px 12px 0;font-size:13.5px;line-height:1.55;color:var(--texto2)}
+#relatorio .comonota{margin:8px 0 0;font-size:11.5px;color:#7d6c5e;line-height:1.45}
+/* ⭐ o aviso de caderno não terminado */
+.avisoparcial{background:#fff6e5;border:2px solid #e5b93c;border-radius:10px;
+  padding:8px 10px;margin:8px 0;font-size:12.5px;line-height:1.45;color:#6a4b00}
+.notao{display:flex;align-items:center;gap:14px;background:#fff;border:3px solid var(--cor);
+  border-radius:18px;padding:10px 14px;margin:10px 0 2px}
+.notao .nn{font-size:clamp(30px,9vw,44px);font-weight:900;color:var(--cor);line-height:1;
+  font-variant-numeric:tabular-nums}
+.notao .nl{font-size:12.5px;color:#3a2f27;line-height:1.45}
+
+#menuProf{display:none;position:fixed;inset:0;z-index:60;background:rgba(45,28,16,.62);align-items:center;justify-content:center;padding:14px}
+#menuProf.aberto{display:flex}
+#menuProf .cx{background:#fff;border:4px solid var(--cor);border-radius:20px;padding:16px;max-width:520px;width:100%;
+  max-height:92vh;overflow:auto;box-shadow:0 14px 44px rgba(0,0,0,.4)}
+#menuProf h3{margin:0 0 4px;color:var(--cor2);font-size:20px}
+#menuProf p{margin:0 0 12px;font-size:13px;color:#57493f;line-height:1.4}
+#menuProf .folhas{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+#menuProf .folhas button{min-height:46px;border:0;border-radius:12px;background:#f4ebe3;color:#57493f;font-weight:800;
+  font-size:14px;padding:8px 12px;box-shadow:0 3px 0 #ddd0c4;flex:1 1 150px;text-align:left}
+#teclado{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:3px solid var(--cor);padding:8px;display:none}
+#teclado.aberto{display:block}
+#teclado .dica{text-align:center;font-weight:800;color:var(--cor2);font-size:13px;margin-bottom:6px}
+#tk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:560px;margin:0 auto}
+#tk button{min-height:48px;border:0;border-radius:12px;background:#f4ebe3;color:var(--texto);font-weight:900;font-size:19px;box-shadow:0 3px 0 #ddd0c4}
+#tk button:active{transform:translateY(2px);box-shadow:0 1px 0 #ddd0c4}
+#tk button.ap{background:#fde2da;grid-column:span 3}
+#tk button.ok{background:#d9f2e3;grid-column:span 4}
+/* ⚠️ O TECLADO FICOU MAIOR (15/set/2026): eram 29 teclas e passaram a ser 39,
+   porque faltavam K, W, Y e os acentos — sem eles a criança não conseguia
+   escrever PÊSSEGO e a folha nunca fechava. Com 39 teclas em 7 colunas, num
+   celular de 320 px a tecla caía para 38 px de lado, abaixo do piso de 40 px
+   da casa (medido, não suposto). Aqui a folga aperta e o alvo volta a 40. */
+@media(max-width:380px){
+  #teclado{padding:6px}
+  #tk{gap:4px}
+  #tk button{min-height:44px;font-size:17px}
+}
+/* ⚠️⚠️ O TECLADO TAPAVA A ATIVIDADE — o Marcos viu no celular (15/set/2026):
+   "ele preenche a tela e não dá para ver a atividade". Medido: na cruzadinha de
+   360x640 o teclado ocupava 368 px de 640 (58% da tela) e a grade ficava
+   INTEIRA por baixo dele. Duas coisas consertam isso, e são independentes:
+   1. aqui, o teclado encolhe na tela BAIXA (celular deitado, monitor velho da
+      escola) — a tecla continua com 40 px de lado, que é o piso da casa;
+   2. no `abreCruz` do folhas.js, a palavra que está sendo escrita ROLA para a
+      faixa que sobra ACIMA do teclado. Sem a 2, encolher só adia o problema. */
+@media(max-height:760px){
+  #teclado .dica{margin-bottom:3px;font-size:12px}
+  #tk button{min-height:40px;font-size:16px}
+}
+/* enquanto o teclado está aberto, a página ganha chão para poder rolar */
+body.comtec{padding-bottom:460px;padding-bottom:var(--tech,460px)}
+#confete{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.cf{position:absolute;width:9px;height:14px;opacity:.95;-webkit-animation:cai 1.5s linear forwards;animation:cai 1.5s linear forwards}
+@-webkit-keyframes cai{to{transform:translateY(105vh) rotate(560deg);opacity:0}}
+@keyframes cai{to{transform:translateY(105vh) rotate(560deg);opacity:0}}
+.oculto{display:none!important}
+.ajuda{text-align:center;font-size:14px;color:#7d6c5e;margin:2px 0 6px}
+.fantasma{position:fixed;z-index:70;pointer-events:none;opacity:.92;
+  -webkit-transform:scale(1.1);transform:scale(1.1);
+  -webkit-box-shadow:0 12px 26px rgba(50,30,15,.3);box-shadow:0 12px 26px rgba(50,30,15,.3)}
+/* o cinto e o suspensório do `draggable="false"`: navegador antigo não olha o
+   atributo, mas olha esta regra */
+img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:none}
+.bt.pronto{min-height:48px;padding:0 22px;font-size:16px;margin:6px auto 0;display:block}
+
+/* =========================================================================
+   ANIMAÇÃO DAS FOLHAS — e a regra que manda é NADA ANIMA SEM FUNÇÃO.
+     · os itens ENTRAM EM CASCATA → a criança vê que a folha tem começo e ordem;
+     · a faixa do título DESLIZA → marca a troca de folha;
+     · o acerto DÁ UM PULINHO e a opção certa BRILHA → resposta tátil;
+     · o erro BALANÇA de leve → diz "de novo" sem dizer "errou".
+   `prefers-reduced-motion` desliga tudo e a folha continua inteira.
+   ========================================================================= */
+.pagina.viva .item{-webkit-animation:entraItem .42s ease-out both;animation:entraItem .42s ease-out both}
+.pagina.viva .item:nth-child(2){-webkit-animation-delay:.05s;animation-delay:.05s}
+.pagina.viva .item:nth-child(3){-webkit-animation-delay:.10s;animation-delay:.10s}
+.pagina.viva .item:nth-child(4){-webkit-animation-delay:.15s;animation-delay:.15s}
+.pagina.viva .item:nth-child(5){-webkit-animation-delay:.20s;animation-delay:.20s}
+.pagina.viva .item:nth-child(6){-webkit-animation-delay:.25s;animation-delay:.25s}
+.pagina.viva .item:nth-child(n+7){-webkit-animation-delay:.30s;animation-delay:.30s}
+@-webkit-keyframes entraItem{from{opacity:0;-webkit-transform:translateY(14px)}to{opacity:1;-webkit-transform:none}}
+@keyframes entraItem{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.pagina.viva .faixa{-webkit-animation:deslizaFaixa .4s cubic-bezier(.2,.9,.3,1) both;
+  animation:deslizaFaixa .4s cubic-bezier(.2,.9,.3,1) both}
+@-webkit-keyframes deslizaFaixa{from{opacity:0;-webkit-transform:translateX(-22px)}to{opacity:1;-webkit-transform:none}}
+@keyframes deslizaFaixa{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+.op.certa,.cartaocasa.escolhido{
+  -webkit-animation:pulinho .4s cubic-bezier(.3,1.6,.5,1);animation:pulinho .4s cubic-bezier(.3,1.6,.5,1)}
+@-webkit-keyframes pulinho{0%{-webkit-transform:scale(1)}45%{-webkit-transform:scale(1.09)}100%{-webkit-transform:scale(1)}}
+@keyframes pulinho{0%{transform:scale(1)}45%{transform:scale(1.09)}100%{transform:scale(1)}}
+.op.certa{position:relative;overflow:hidden}
+.op.certa::after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:38%;pointer-events:none;
+  background:-webkit-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));
+  -webkit-transform:skewX(-18deg);transform:skewX(-18deg);
+  -webkit-animation:brilhoOp .55s .1s ease-out;animation:brilhoOp .55s .1s ease-out}
+@-webkit-keyframes brilhoOp{from{left:-40%}to{left:112%}}
+@keyframes brilhoOp{from{left:-40%}to{left:112%}}
+.op.erro{-webkit-animation:balanca .34s;animation:balanca .34s}
+@-webkit-keyframes balanca{0%,100%{-webkit-transform:translateX(0)}25%{-webkit-transform:translateX(-6px)}75%{-webkit-transform:translateX(6px)}}
+@keyframes balanca{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.item{-webkit-transition:border-color .4s,background .4s;transition:border-color .4s,background .4s}
+/* a figura responde ao toque — o alvo reage ao PRESSIONAR */
+.op.figbt:active,.cartaocasa:active,.celmor:active{-webkit-transform:scale(.96);transform:scale(.96)}
+@media (prefers-reduced-motion:reduce){
+  .pagina.viva .item,.pagina.viva .faixa,.op.certa,.op.erro,.cartaocasa.escolhido{
+    -webkit-animation:none!important;animation:none!important;opacity:1!important;
+    -webkit-transform:none!important;transform:none!important}
+  .op.certa::after{display:none}
+}
+/*<dossie-css>*/
+#dossie{display:none;position:fixed;inset:0;z-index:70;background:rgba(20,16,45,.72);
+  align-items:center;justify-content:center;padding:12px}
+#dossie.aberto{display:-webkit-box;display:-ms-flexbox;display:flex}
+#dossie .cx{background:#fff;border:4px solid #6d5ae6;border-radius:20px;padding:14px;
+  max-width:720px;width:100%;max-height:88vh;display:flex;flex-direction:column}
+#dossie h3{margin:0 0 6px;color:#6d5ae6;font-size:20px}
+#dsCorpo{overflow:auto;text-align:left;font-size:13px;line-height:1.5;color:var(--texto,#1e2334)}
+#dsCorpo table{border-collapse:collapse;width:100%;margin:8px 0}
+#dsCorpo th,#dsCorpo td{border:1px solid #d9ddf2;padding:6px 8px;text-align:left;vertical-align:top}
+#dsCorpo th{background:#eceefa;color:var(--texto2,#2c3350)}
+#dsCorpo .dobj{display:block;margin-top:4px;font-size:11.5px;color:var(--texto3,#3b4064)}
+#dsCorpo .dfonte{margin:0 0 6px}
+#dsCorpo .dsub{margin:12px 0 4px}
+#dsCorpo .dtxt{margin:0}
+#dsCorpo .descada,#dsCorpo .dev{margin:4px 0 0 18px;padding:0}
+#dossie #dsFechar{margin-top:10px;min-height:46px}
+.bdossie{display:block;width:100%;margin-top:10px;min-height:46px}
+/*</dossie-css>*/
+/* ---------- as peças próprias deste caderno (ortografia) ----------
+   ⚠️ Aqui não há figura para olhar: o conteúdo é PALAVRA. Então a palavra é que
+   tem de ser grande, legível e com espaço em volta — é ela que faz o papel que
+   a ilustração faz nos outros cadernos. */
+.pgrande{font-size:clamp(22px,6.4vw,32px);font-weight:900;letter-spacing:clamp(1px,.6vw,3px);
+  color:var(--texto3);text-align:center;line-height:1.25;word-break:break-word;padding:0 6px}
+.pgrande .lacuna{display:inline-block;min-width:clamp(22px,6vw,30px);vertical-align:baseline;
+  border-bottom:4px solid var(--cor);margin:0 2px}
+/* o botão de PALAVRA (gavetas e quadro): texto, não figura */
+.op.pal{min-width:clamp(88px,26vw,150px);min-height:52px;padding:8px 12px;
+  font-size:clamp(13px,3.5vw,16px);font-weight:800;letter-spacing:.4px;color:var(--texto2)}
+.op.pal.marcada{border-color:var(--cor);background:var(--corclara);
+  -webkit-transform:scale(1.04);transform:scale(1.04)}
+.op.pal.usada{opacity:.3;pointer-events:none}
+.figbanco.quadro{border:3px dashed #e0d3c6;border-radius:16px;background:#fffdfa;
+  padding:10px 8px;margin:10px}
+/* a letra sozinha do "complete com T ou D" — alvo grande, pouca letra */
+.op.letra{min-width:clamp(62px,17vw,84px);min-height:60px;font-size:clamp(20px,5.6vw,26px);
+  font-weight:900;letter-spacing:1px}
+/* o "circule a certa": o botão vira a roda de lápis em volta da palavra */
+.op.circ{border-radius:999px;padding:10px 16px;min-height:52px;
+  font-size:clamp(14px,3.9vw,18px);font-weight:800;letter-spacing:.4px}
+.op.circ.certa{-webkit-box-shadow:0 0 0 4px #bdebd0;box-shadow:0 0 0 4px #bdebd0}
+/* a palavra escrita ERRADA, quando ela precisa aparecer (folhas 12 e 19) */
+.errada{color:#b23c17;text-decoration:line-through;-webkit-text-decoration-color:#e0562f;
+  text-decoration-color:#e0562f;font-weight:900}
+/* texto corrido de gênero: recado, notícia. Alinhado à esquerda, como no papel */
+.poema.recado{text-align:left;line-height:1.65;font-size:clamp(14px,3.8vw,17px)}
+.poema .tl{margin:2px 0}
+.frases{margin:8px 0 4px}
+.lacuna.grande{min-width:clamp(120px,34vw,190px);font-size:clamp(14px,3.8vw,17px);font-weight:900}
+.lacuna.erro{border-bottom-color:#e0562f;background:#fdeee9;border-radius:8px 8px 0 0}
+/* a fila da receita: passo é FRASE, então a fila é vertical e larga */
+.trilhaord.passos{flex-direction:column;align-items:stretch;margin:8px 10px 4px}
+.trilhaord.passos .slot{width:auto;min-height:52px;flex-direction:row;gap:8px;
+  padding:8px 10px;justify-content:flex-start;text-align:left}
+.trilhaord.passos .slot .rot{text-align:left;font-size:clamp(12px,3.3vw,15px)}
+/* a linha de casas do "reescreva certo": uma palavra por vez */
+.cruz.uma{grid-auto-flow:column;justify-content:center;margin:4px auto 2px}
+.pista.oculta{display:none}
+/* o cartaz do fecho: as regras que a criança escolheu, uma embaixo da outra */
+.rua.cartaz{flex-direction:column;align-items:stretch;gap:6px;padding:10px;
+  border:3px solid #e6dbd1;border-radius:16px;background:#fffdfa;margin:0 10px 8px}
+.regral{border-left:6px solid var(--cor);border-radius:8px;background:#fff;padding:7px 10px;
+  text-align:left}
+.regral b{display:block;font-size:clamp(13px,3.5vw,16px);color:#2c3350;line-height:1.3}
+.regral i{display:block;font-style:normal;font-weight:800;font-size:clamp(11px,3vw,13px);
+  color:#8a7768;letter-spacing:.4px;margin-top:2px}
+/* a capa: os pares de letras que fazem o mesmo som são o desenho da capa */
+.dupla{display:inline-flex;align-items:center;gap:4px;background:#fff;border:3px solid #e6dbd1;
+  border-radius:14px;padding:6px 10px;margin:3px}
+.dupla b{font-size:clamp(17px,4.6vw,22px);font-weight:900;color:#3b4064}
+.dupla i{font-style:normal;font-weight:900;color:var(--cor);font-size:clamp(13px,3.4vw,16px)}
+/* ---------- as peças próprias deste caderno (a loteria do S) ---------- */
+/* a FICHA: figura + palavra, e a criança marca só as escritas certas (folha 1) */
+.marcax.fichas{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.lx.ficha{flex:1 1 44%;max-width:230px;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 6px;text-align:center}
+.lx.ficha .figmini{display:block;width:auto;height:clamp(46px,12vw,66px);max-width:100%;object-fit:contain}
+.lx.ficha .ft{font-weight:900;font-size:clamp(13px,3.5vw,16px);letter-spacing:.5px;color:var(--texto2)}
+.lx.ficha .cx{position:absolute;left:6px;top:6px}
+.lx.ficha{position:relative}
+.lx.ficha.erroficha{border-color:#e0a05a;background:#fff7ec}
+.lx.ficha.erroficha .ft s{color:#b23c17;-webkit-text-decoration-color:#e0562f;text-decoration-color:#e0562f}
+.lx.ficha.erroficha .ft b{display:block;color:#0d7736}
+/* as SÍLABAS soltas e a palavra que se monta (folha 13) */
+.op.sil{min-width:clamp(58px,16vw,86px);min-height:52px;font-size:clamp(15px,4vw,19px);
+  font-weight:900;letter-spacing:1px}
+.op.sil.usada{border-color:#15a34a;background:#e7f8ee;color:#0d7736;pointer-events:none}
+.montada{min-height:34px;text-align:center;font-weight:900;letter-spacing:2px;
+  font-size:clamp(16px,4.4vw,21px);color:var(--texto3);margin:2px 0 4px}
+.montada[data-feito]::before{content:attr(data-feito);color:#0d7736}
+/* a FRASE GRUDADA e os vãos onde entra o espaço (folha 18) */
+.grudada{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  margin:6px 4px;padding:8px 4px;border:3px solid #e6dbd1;border-radius:14px;background:#fff}
+.gl{font-weight:900;font-size:clamp(15px,4.2vw,20px);letter-spacing:0;color:var(--texto3);line-height:1.6}
+.vao{width:14px;min-width:14px;height:42px;border:0;background:transparent;padding:0;
+  position:relative;cursor:pointer}
+.vao::after{content:"";position:absolute;left:5px;top:8px;width:3px;height:26px;border-radius:2px;
+  background:#e6dbd1}
+.vao.cortado::after{background:#15a34a;-webkit-box-shadow:0 0 0 2px #bdebd0;box-shadow:0 0 0 2px #bdebd0}
+.vao.erro::after{background:#e0562f}
+/* a VITRINE das duas figuras lado a lado (folha 16) */
+.ficha.vitrine{flex:1 1 44%;max-width:210px;display:flex;flex-direction:column;align-items:center;
+  gap:4px;padding:8px 6px;text-align:center;border:3px solid #e6dbd1;border-radius:14px;background:#fff}
+.ficha.vitrine .figmini{display:block;width:auto;height:clamp(52px,14vw,78px);max-width:100%;object-fit:contain}
+/* ⚠️ TINTA PRÓPRIA, não o token: esta peça pinta o PRÓPRIO fundo (branco), e o
+   `--texto` é a tinta do fundo da atividade. Quem tem superfície própria tem
+   tinta própria — senão, num tema diferente, a letra some. Mede o 4c. */
+.ficha.vitrine .ft{font-weight:900;font-size:clamp(13px,3.5vw,16px);color:#3a2f27}
+/* o TEXTINHO: a frase palavra por palavra, cada uma tocável (folhas 7, 13 e 21) */
+.textinho{margin:6px 8px;padding:10px 8px;border:3px solid #e6dbd1;border-radius:14px;background:#fff;
+  line-height:2.1;text-align:left}
+.tp{border:0;background:transparent;padding:4px 3px;margin:0;font:inherit;font-weight:700;
+  font-size:clamp(15px,4vw,18px);color:#4a3d33;border-radius:7px;cursor:pointer;
+  min-height:40px;-webkit-transition:background .15s;transition:background .15s}
+.tp:hover{background:#f7efe7}
+.tp.achada{background:#e7f8ee;color:#0d7736;font-weight:900;
+  -webkit-box-shadow:inset 0 -3px 0 #15a34a;box-shadow:inset 0 -3px 0 #15a34a}
+.tp.marcap{background:#e8f1fb;color:#134f86;font-weight:900;
+  -webkit-box-shadow:inset 0 -3px 0 #1d6fb8;box-shadow:inset 0 -3px 0 #1d6fb8}
+.tp.marcad{background:#fdeee9;color:#8c3414;font-weight:900;
+  -webkit-box-shadow:inset 0 -3px 0 #b8471d;box-shadow:inset 0 -3px 0 #b8471d}
+.tp.nao{-webkit-animation:treme .34s;animation:treme .34s;background:#fdeee9}
+/* o TEXTÃO: a história da folha 24 */
+.textao{margin:6px 8px;padding:12px 12px;border:3px solid #e6dbd1;border-radius:14px;background:#fff;
+  line-height:1.75;font-size:clamp(14px,3.8vw,17px);color:var(--texto3);text-align:left}
+/* os LÁPIS: a cor da família (folha 20) e as duas marcas (folha 21) */
+.ops.lapis{gap:6px;flex-wrap:wrap;justify-content:center;margin:4px 8px 6px}
+/* ⚠️ O FUNDO É DECLARADO AQUI mesmo o JS o trocando pela cor da família: sem
+   fundo próprio na regra, a tinta cravada briga com o tema (é o que o
+   `_qa/cor_fixa.py` mede). Quem crava a tinta tem de cravar o chão embaixo. */
+.op.lapiz{min-height:46px;font-weight:900;font-size:clamp(13px,3.4vw,16px);color:#26201c;
+  background:#fff;border:3px solid #e6dbd1;border-radius:12px;padding:6px 12px}
+.op.lapiz.marcada{-webkit-transform:scale(1.07);transform:scale(1.07);
+  -webkit-box-shadow:0 0 0 3px rgba(0,0,0,.18);box-shadow:0 0 0 3px rgba(0,0,0,.18)}
+.op.lapiz.marcap{background:#e8f1fb;border-color:#1d6fb8;color:#134f86}
+.op.lapiz.marcad{background:#fdeee9;border-color:#b8471d;color:#8c3414}
+/* as PALAVRAS ESPALHADAS que se pintam (folha 20) */
+.espalhadas{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 8px 10px}
+.pal.solta{border:3px solid #e6dbd1;border-radius:12px;background:#fff;padding:9px 13px;
+  min-height:46px;font-weight:900;font-size:clamp(13px,3.6vw,16px);letter-spacing:.5px;
+  color:var(--texto3);cursor:pointer}
+/* ⚠️ ELA PINTA O PRÓPRIO FUNDO em tempo real (a cor da família, vinda do JS),
+   então a tinta tem de ser dela e escura o bastante para as cinco cores da
+   paleta. O token `--texto` aqui seria a tinta do fundo da ATIVIDADE, que não
+   é o fundo que está atrás desta letra. */
+.pal.solta.pintada{background:#fff;border-color:rgba(0,0,0,.2);color:#1c1611;pointer-events:none}
+.pal.solta.nao{-webkit-animation:treme .34s;animation:treme .34s;background:#fdeee9}
+.op.pal.nao{-webkit-animation:treme .34s;animation:treme .34s}
+</style></head><body>
+
+<div id="topo">
+  <button class="zap ouvir" id="bOuvir" aria-label="Ouvir de novo"><svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 0-5 5v1H5v6h2v1a5 5 0 0 0 10 0v-1h2V9h-2V8a5 5 0 0 0-5-5z"/></svg></button>
+  <button class="zap" id="bVoz" aria-label="Ligar ou desligar a narração"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button>
+  <div class="tit">Lost & Found — o balcao dos achados e perdidos</div>
+  <div class="prog"><i id="progI"></i></div>
+  <div class="pg" id="pg">Capa</div>
+</div>
+
+<div id="livro"></div>
+
+<div id="fim">
+  <h2 id="fimTit">Caderno completo!</h2>
+  <div class="estrelas" id="estrelas"></div>
+  <div class="barras" id="barras"></div>
+  <p id="resumo" style="font-weight:800;font-size:16px"></p>
+  <div id="medalha" class="medal" role="button" tabindex="0" aria-label="Troféu. Segure dois segundos para abrir o relatório do professor"><img src="img/lf_trofeu.png?v=2" alt="Troféu" draggable="false" onerror="this.style.display='none';this.parentNode.className='semfig'"></div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="bt verde" id="bVoltar" style="display:none">Voltar para o caderno</button>
+    <button class="bt cinza" id="bRever">Rever o caderno</button>
+    <button class="bt verde" id="bRecomecar">Caderno novo</button>
+  </div>
+  <div id="relatorio"></div>
+</div>
+
+<div id="retomar">
+  <h2 style="color:#8d4120;margin:0 0 6px">Você estava aqui!</h2>
+  <p id="retTxt" style="font-weight:700"></p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="bt verde" id="bContinuar">Continuar de onde parei</button>
+    <button class="bt cinza" id="bZerar">Começar um caderno novo</button>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="bt cinza" id="bAnt"><i class="seta esq"></i>Anterior</button>
+  <div class="txt" id="navTxt"></div>
+  <!-- ⭐ O FECHO A QUALQUER MOMENTO — ver o comentário do `fim()` no folhas.js.
+       Sem ele, 25 folhas castigam justamente a criança que vai devagar: ela
+       nunca chegaria a ver o próprio boletim. -->
+  <button class="bt terminar" id="bTerminar" aria-label="Terminar agora e ver o meu boletim">Terminar</button>
+  <button class="bt" id="bProx">Próxima<i class="seta dir"></i></button>
+</div>
+
+<div id="barraCapa"><div class="lin"><label for="nomeIn">Seu nome:</label><input id="nomeIn" type="text" maxlength="24" autocomplete="off" spellcheck="false" placeholder="escreva aqui"><button class="bt" id="bComecar">Começar</button></div></div>
+
+<div id="menuProf" role="dialog" aria-label="Menu do professor" aria-modal="true">
+  <div class="cx">
+    <h3>Menu do professor</h3>
+    <p>Chave mestra <b>1275@</b>. Abra qualquer folha para conferir; o trabalho da criança não se apaga.</p>
+    <div class="folhas" id="mpFolhas"></div>
+    <!--<dossie-bt>--><button class="bt" id="bDossie">Dossiê pedagógico (currículo da rede)</button><!--</dossie-bt>-->
+<button class="bt cinza" id="mpFechar">Fechar</button>
+  </div>
+</div>
+
+<div id="teclado" aria-label="Teclado de letras">
+  <div class="dica" id="tkDica">Escreva a palavra</div>
+  <div id="tk"></div>
+</div>
+<div id="confete" aria-hidden="true"></div>
+
+<script>
+/* ---------- OS POTES DE CADA FOLHA (o gerar_falas.py lê este bloco) ----------
+   ⚠️ A POSIÇÃO É A IDENTIDADE: o pote `pN` é da folha N, os ids dela são
+   `nN_i` e a fala do enunciado é `pNenun`. Mudar a ordem das folhas muda tudo
+   junto — e é de propósito, porque antes eram três listas para combinar à mão
+   e o relatório saía zero com a folha inteira respondida. */
+/*GESTOS-INI*/
+/* ⚠️ O GESTO DE CADA FOLHA, DECLARADO À MÃO — uma palavra: o que a criança FAZ
+   com o dedo, não o que o código parece. Ele existe porque o portão 0b7 tentou
+   ADIVINHAR isto do código e errou feio.
+   ⚠️ E O GESTO NÃO SE ESCOLHE DO NOSSO CARDÁPIO: ele sai do COMANDO IMPRESSO na
+      folha de papel de onde a folha nasceu (regra do Marcos, 13/set/2026: *"as
+      interatividades têm que vir das atividades que você seleciona na internet,
+      o que as atividades pedem para o aluno fazer"*). "Recorte e cole na coluna
+      correta" dá gaveta; "grife os substantivos compostos" dá marca-texto;
+      "pinte com a mesma cor" dá pintar. Anotar o comando verbatim no POTE.
+   ⚠️ Folha nova = linha nova AQUI, no mesmo commit.
+   Ex.: {"f1": "escolher", "f2": "classificar", "f3": "ligar"} */
+var GESTOS = {
+ "f1": "escolher",
+ "f2": "classificar",
+ "f3": "classificar",
+ "f4": "marcar dois tipos",
+ "f5": "escolher",
+ "f6": "escolher",
+ "f7": "escolher",
+ "f8": "julgar",
+ "f9": "completar no texto",
+ "f10": "montar",
+ "f11": "ligar",
+ "f12": "marca-texto",
+ "f13": "escolher",
+ "f14": "escolher",
+ "f15": "escolher",
+ "f16": "ligar",
+ "f17": "julgar",
+ "f18": "juntar duas frases",
+ "f19": "digitar",
+ "f20": "ler e escolher",
+ "f21": "marcar varios",
+ "f22": "mural"
+};
+/*GESTOS-FIM*/
+/*ITENS-INI*/
+/* ⚠️⚠️ A POSIÇÃO É A IDENTIDADE. A folha da posição 7 usa o pote `p7`, grava os
+   ids `n7_*` e fala `p7enun`. Não há segunda lista para desencontrar — isso já
+   fez o relatório sair ZERO com a folha inteira respondida.
+   ⚠️⚠️ E O POTE DIZ QUANTOS ITENS A FOLHA TEM: o `idsDaPagina` conta pelo
+   tamanho dele. Se a folha desenha uma peça por PALAVRA, o pote lista as
+   palavras — não as famílias delas. Errar isso faz a folha se dar por PRONTA
+   cedo demais e pular com itens ainda na tela, sem erro nenhum no console.
+   Quem mede é `node _qa/conta_folha.js <pasta>`; rodar SEMPRE.
+   ⚠️ Folha de LIGAR e folha de UM ITEM SÓ guardam o pote EMBRULHADO:
+      "p7": [["chave1","chave2","chave3"]] */
+var ITENS = {
+ "p1": ["q1","q2","q3","q4","q5","q6","q7","q8"],
+ "p2": ["g1","g2","g3","g4","g5","g6","g7","g8","g9","g10","g11","g12"],
+ "p3": ["h1","h2","h3","h4","h5","h6","h7","h8","h9"],
+ "p4": ["m1|c","m1|u","m2|c","m2|u","m3|c","m3|u","m4|c","m4|u","m5|c","m5|u"],
+ "p5": ["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12"],
+ "p6": ["v1","v2","v3","v4","v5","v6"],
+ "p7": ["n1","n2","n3","n4","n5","n6","n7","n8"],
+ "p8": ["j1","j2","j3","j4","j5","j6","j7","j8"],
+ "p9": ["d1","d2","d3","d4","d5","d6","d7"],
+ "p10": ["w1","w2","w3","w4"],
+ "p11": [["r1","r2","r3","r4","r5","r6"]],
+ "p12": ["a1","a2","a3","a4","a5","a6"],
+ "p13": ["p1","p2","p3","p4","p5","p6"],
+ "p14": ["t1","t2","t3","t4","t5","t6"],
+ "p15": ["o1","o2","o3","o4","o5","o6"],
+ "p16": [["e1","e2","e3","e4","e5","e6"]],
+ "p17": ["u1","u2","u3","u4","u5","u6"],
+ "p18": ["z1","z2","z3","z4","z5","z6"],
+ "p19": ["x1","x2","x3","x4","x5","x6"],
+ "p20": ["q0","q1","q2","q3","q4"],
+ "p21": [["y1","y2","y3","y4","y5","y6","y7","y8","y9","y10","y11","y12"]],
+ "p22": ["z11","z12","z13","z14","z15","z16","z17","z18"]
+};
+/*ITENS-FIM*/
+/*FALAS-INI*/
+var FALAS = {
+ "acha_a1": "The woman who is talking is my aunt.",
+ "acha_a2": "This is the book that I borrowed from you.",
+ "acha_a3": "The man whose car broke down is my neighbor.",
+ "acha_a4": "That is the house which we visited last year.",
+ "acha_a5": "The teacher whose class is very popular is strict.",
+ "acha_a6": "The car that she bought is expensive.",
+ "capa": "Lost and Found: o balcão dos achados e perdidos. Inglês, oitavo ano, vinte e duas folhas sobre some, any, much, many e os pronomes relativos. Você vai atender o balcão de um aeroporto. Escreva o seu nome ali embaixo e toque em Começar.",
+ "certo10_w1": "Perfeito! A pergunta ficou de pé.",
+ "certo10_w2": "Perfeito! A pergunta ficou de pé.",
+ "certo10_w3": "Perfeito! A pergunta ficou de pé.",
+ "certo10_w4": "Perfeito! A pergunta ficou de pé.",
+ "certo11_r1": "Isso! A pergunta e a resposta combinam.",
+ "certo11_r2": "Isso! A pergunta e a resposta combinam.",
+ "certo11_r3": "Isso! A pergunta e a resposta combinam.",
+ "certo11_r4": "Isso! A pergunta e a resposta combinam.",
+ "certo11_r5": "Isso! A pergunta e a resposta combinam.",
+ "certo11_r6": "Isso! A pergunta e a resposta combinam.",
+ "certo12_a1": "Achou!",
+ "certo12_a2": "Achou!",
+ "certo12_a3": "Achou!",
+ "certo12_a4": "Achou!",
+ "certo12_a5": "Achou!",
+ "certo12_a6": "Achou!",
+ "certo13_p1": "Isso mesmo!",
+ "certo13_p2": "Isso mesmo!",
+ "certo13_p3": "Isso mesmo!",
+ "certo13_p4": "Isso mesmo!",
+ "certo13_p5": "Isso mesmo!",
+ "certo13_p6": "Isso mesmo!",
+ "certo14_t1": "Isso mesmo!",
+ "certo14_t2": "Isso mesmo!",
+ "certo14_t3": "Isso mesmo!",
+ "certo14_t4": "Isso mesmo!",
+ "certo14_t5": "Isso mesmo!",
+ "certo14_t6": "Isso mesmo!",
+ "certo15_o1": "Isso! Você viu de quem era a coisa.",
+ "certo15_o2": "Isso! Você viu de quem era a coisa.",
+ "certo15_o3": "Isso! Você viu de quem era a coisa.",
+ "certo15_o4": "Isso! Você viu de quem era a coisa.",
+ "certo15_o5": "Isso! Você viu de quem era a coisa.",
+ "certo15_o6": "Isso! Você viu de quem era a coisa.",
+ "certo16_e1": "Isso! A explicação é dessa mesmo.",
+ "certo16_e2": "Isso! A explicação é dessa mesmo.",
+ "certo16_e3": "Isso! A explicação é dessa mesmo.",
+ "certo16_e4": "Isso! A explicação é dessa mesmo.",
+ "certo16_e5": "Isso! A explicação é dessa mesmo.",
+ "certo16_e6": "Isso! A explicação é dessa mesmo.",
+ "certo17_u1": "Isso! that serve para coisa e para gente: aqui está certo.",
+ "certo17_u2": "Isso! a irmã é DO menino: era whose.",
+ "certo17_u3": "Isso! o livro é coisa: which está certo.",
+ "certo17_u4": "Isso! Chaplin é gente: who está certo.",
+ "certo17_u5": "Isso! as páginas são DO livro: era whose.",
+ "certo17_u6": "Isso! a mulher é gente: who está certo.",
+ "certo18_z1": "Perfeito! Duas frases viraram uma.",
+ "certo18_z2": "Perfeito! Duas frases viraram uma.",
+ "certo18_z3": "Perfeito! Duas frases viraram uma.",
+ "certo18_z4": "Perfeito! Duas frases viraram uma.",
+ "certo18_z5": "Perfeito! Duas frases viraram uma.",
+ "certo18_z6": "Perfeito! Duas frases viraram uma.",
+ "certo19_x1": "Isso! Escrito certinho.",
+ "certo19_x2": "Isso! Escrito certinho.",
+ "certo19_x3": "Isso! Escrito certinho.",
+ "certo19_x4": "Isso! Escrito certinho.",
+ "certo19_x5": "Isso! Escrito certinho.",
+ "certo19_x6": "Isso! Escrito certinho.",
+ "certo1_q1": "Isso! luggage é a bagagem toda junta: ninguém diz *one luggage*.",
+ "certo1_q2": "Isso! suitcase é UMA mala — dá para contar duas, três.",
+ "certo1_q3": "Isso! areia não se conta em unidades: são grãos demais.",
+ "certo1_q4": "Isso! uma revista, duas revistas: conta-se.",
+ "certo1_q5": "Isso! geleia é massa: o vidro se conta, a geleia não.",
+ "certo1_q6": "Isso! uma escova, duas escovas: conta-se.",
+ "certo1_q7": "Isso! farinha é pó: mede-se em quilos, não em unidades.",
+ "certo1_q8": "Isso! uma bicicleta, duas bicicletas: conta-se.",
+ "certo20_0": "Isso! Você leu com atenção.",
+ "certo20_1": "Isso! whose diz de quem é a coisa que vem logo depois dele.",
+ "certo20_2": "Isso! which é para coisa e para bicho; who é para gente.",
+ "certo20_3": "Isso! Você leu com atenção.",
+ "certo20_4": "Isso! isn't é negativa, e negativa leva any.",
+ "certo21": "Você marcou todas, e só as certas!",
+ "certo22_z11": "Entrou no seu cartaz!",
+ "certo22_z12": "Entrou no seu cartaz!",
+ "certo22_z13": "Entrou no seu cartaz!",
+ "certo22_z14": "Entrou no seu cartaz!",
+ "certo22_z15": "Entrou no seu cartaz!",
+ "certo22_z16": "Entrou no seu cartaz!",
+ "certo22_z17": "Entrou no seu cartaz!",
+ "certo22_z18": "Entrou no seu cartaz!",
+ "certo2_g1": "Isso! Gaveta certa.",
+ "certo2_g10": "Isso! Gaveta certa.",
+ "certo2_g11": "Isso! Gaveta certa.",
+ "certo2_g12": "Isso! Gaveta certa.",
+ "certo2_g2": "Isso! Gaveta certa.",
+ "certo2_g3": "Isso! Gaveta certa.",
+ "certo2_g4": "Isso! Gaveta certa.",
+ "certo2_g5": "Isso! Gaveta certa.",
+ "certo2_g6": "Isso! Gaveta certa.",
+ "certo2_g7": "Isso! Gaveta certa.",
+ "certo2_g8": "Isso! Gaveta certa.",
+ "certo2_g9": "Isso! Gaveta certa.",
+ "certo3_h1": "Isso! Gaveta certa.",
+ "certo3_h2": "Isso! Gaveta certa.",
+ "certo3_h3": "Isso! Gaveta certa.",
+ "certo3_h4": "Isso! Gaveta certa.",
+ "certo3_h5": "Isso! Gaveta certa.",
+ "certo3_h6": "Isso! Gaveta certa.",
+ "certo3_h7": "Isso! Gaveta certa.",
+ "certo3_h8": "Isso! Gaveta certa.",
+ "certo3_h9": "Isso! Gaveta certa.",
+ "certo4_m1_c": "Isso! Essa dá para contar.",
+ "certo4_m1_u": "Isso! Essa não se conta em unidades.",
+ "certo4_m2_c": "Isso! Essa dá para contar.",
+ "certo4_m2_u": "Isso! Essa não se conta em unidades.",
+ "certo4_m3_c": "Isso! Essa dá para contar.",
+ "certo4_m3_u": "Isso! Essa não se conta em unidades.",
+ "certo4_m4_c": "Isso! Essa dá para contar.",
+ "certo4_m4_u": "Isso! Essa não se conta em unidades.",
+ "certo4_m5_c": "Isso! Essa dá para contar.",
+ "certo4_m5_u": "Isso! Essa não se conta em unidades.",
+ "certo4_m6_c": "Isso! Essa dá para contar.",
+ "certo4_m6_u": "Isso! Essa não se conta em unidades.",
+ "certo4_m7_c": "Isso! Essa dá para contar.",
+ "certo4_m7_u": "Isso! Essa não se conta em unidades.",
+ "certo5_s1": "Isso! frase que diz que TEM: some.",
+ "certo5_s10": "Isso! é uma OFERTA — oferecer leva some.",
+ "certo5_s11": "Isso! pergunta de quem não sabe: any.",
+ "certo5_s12": "Isso! frase que diz que TEM: some.",
+ "certo5_s2": "Isso! frase com don't: any.",
+ "certo5_s3": "Isso! frase que diz que TEM: some.",
+ "certo5_s4": "Isso! pergunta de quem não sabe a resposta: any.",
+ "certo5_s5": "Isso! frase com don't: any.",
+ "certo5_s6": "Isso! aren't é negativa: any.",
+ "certo5_s7": "Isso! frase que diz que TEM: some.",
+ "certo5_s8": "Isso! frase com don't: any.",
+ "certo5_s9": "Isso! é um PEDIDO, não uma dúvida — pedido leva some.",
+ "certo6_v1": "Isso mesmo!",
+ "certo6_v2": "Isso mesmo!",
+ "certo6_v3": "Isso mesmo!",
+ "certo6_v4": "Isso mesmo!",
+ "certo6_v5": "Isso mesmo!",
+ "certo6_v6": "Isso mesmo!",
+ "certo7_n1": "Isso mesmo!",
+ "certo7_n2": "Isso mesmo!",
+ "certo7_n3": "Isso mesmo!",
+ "certo7_n4": "Isso mesmo!",
+ "certo7_n5": "Isso mesmo!",
+ "certo7_n6": "Isso mesmo!",
+ "certo7_n7": "Isso mesmo!",
+ "certo7_n8": "Isso mesmo!",
+ "certo8_j1": "Isso! são várias: carrots.",
+ "certo8_j2": "Isso! water não se conta, e a frase diz que TEM: some water.",
+ "certo8_j3": "Isso! water nunca vira waters: é much water.",
+ "certo8_j4": "Isso! suitcase se conta, então how many — e no plural.",
+ "certo8_j5": "Isso! depois de how many vem o plural: sandwiches.",
+ "certo8_j6": "Isso! tea não se conta: nada de teas.",
+ "certo8_j7": "Isso! salt não se conta: salt, sem s.",
+ "certo8_j8": "Isso! quatro cadeiras: chairs, no plural.",
+ "certo9_d1": "Isso! pergunta de quem não sabe: any.",
+ "certo9_d2": "Isso! o moço diz que TEM: some.",
+ "certo9_d3": "Isso! ela diz que TEM, e money não se conta: some.",
+ "certo9_d4": "Isso! ela diz que TEM, e keys se contam: some.",
+ "certo9_d5": "Isso! money não se conta: how much.",
+ "certo9_d6": "Isso! keys se contam: how many.",
+ "certo9_d7": "Isso! aren't é negativa: any.",
+ "def_e1": "a butcher.",
+ "def_e2": "a skyscraper.",
+ "def_e3": "an oven.",
+ "def_e4": "a giraffe.",
+ "def_e5": "a fireman.",
+ "def_e6": "a florist.",
+ "defd_e1": "a person who sells meat in a shop.",
+ "defd_e2": "a tall building which you can see in big cities.",
+ "defd_e3": "a machine which is used for cooking food.",
+ "defd_e4": "a tall animal which has got a very long neck.",
+ "defd_e5": "a man who extinguishes fires in buildings.",
+ "defd_e6": "a person who grows and sells flowers in a shop.",
+ "dica10_w1": "Toda pergunta destas começa igual. E o que vem no fim é o verbo com there.",
+ "dica10_w2": "Toda pergunta destas começa igual. E o que vem no fim é o verbo com there.",
+ "dica10_w3": "Toda pergunta destas começa igual. E o que vem no fim é o verbo com there.",
+ "dica10_w4": "Toda pergunta destas começa igual. E o que vem no fim é o verbo com there.",
+ "dica11_r1": "A pergunta é de uma coisa só ou de várias? A resposta tem de ser do mesmo jeito.",
+ "dica11_r2": "A pergunta é de uma coisa só ou de várias? A resposta tem de ser do mesmo jeito.",
+ "dica11_r3": "A pergunta é de uma coisa só ou de várias? A resposta tem de ser do mesmo jeito.",
+ "dica11_r4": "A pergunta é de uma coisa só ou de várias? A resposta tem de ser do mesmo jeito.",
+ "dica11_r5": "A pergunta é de uma coisa só ou de várias? A resposta tem de ser do mesmo jeito.",
+ "dica11_r6": "A pergunta é de uma coisa só ou de várias? A resposta tem de ser do mesmo jeito.",
+ "dica12_a1": "Ele fica logo depois do nome da pessoa ou da coisa que a frase está explicando.",
+ "dica12_a2": "Ele fica logo depois do nome da pessoa ou da coisa que a frase está explicando.",
+ "dica12_a3": "Ele fica logo depois do nome da pessoa ou da coisa que a frase está explicando.",
+ "dica12_a4": "Ele fica logo depois do nome da pessoa ou da coisa que a frase está explicando.",
+ "dica12_a5": "Ele fica logo depois do nome da pessoa ou da coisa que a frase está explicando.",
+ "dica12_a6": "Ele fica logo depois do nome da pessoa ou da coisa que a frase está explicando.",
+ "dica13_p1": "Um dos dois é só para gente. O outro é para coisa e para bicho.",
+ "dica13_p2": "Um dos dois é só para gente. O outro é para coisa e para bicho.",
+ "dica13_p3": "Um dos dois é só para gente. O outro é para coisa e para bicho.",
+ "dica13_p4": "Um dos dois é só para gente. O outro é para coisa e para bicho.",
+ "dica13_p5": "Um dos dois é só para gente. O outro é para coisa e para bicho.",
+ "dica13_p6": "Um dos dois é só para gente. O outro é para coisa e para bicho.",
+ "dica14_t1": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém?",
+ "dica14_t2": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém?",
+ "dica14_t3": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém?",
+ "dica14_t4": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém?",
+ "dica14_t5": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém?",
+ "dica14_t6": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém?",
+ "dica15_o1": "Depois de whose vem sempre o nome de uma coisa. Depois de who vem sempre um verbo.",
+ "dica15_o2": "Depois de whose vem sempre o nome de uma coisa. Depois de who vem sempre um verbo.",
+ "dica15_o3": "Depois de whose vem sempre o nome de uma coisa. Depois de who vem sempre um verbo.",
+ "dica15_o4": "Depois de whose vem sempre o nome de uma coisa. Depois de who vem sempre um verbo.",
+ "dica15_o5": "Depois de whose vem sempre o nome de uma coisa. Depois de who vem sempre um verbo.",
+ "dica15_o6": "Depois de whose vem sempre o nome de uma coisa. Depois de who vem sempre um verbo.",
+ "dica16_e1": "A explicação começa dizendo se é pessoa, animal, prédio ou máquina. Comece por aí.",
+ "dica16_e2": "A explicação começa dizendo se é pessoa, animal, prédio ou máquina. Comece por aí.",
+ "dica16_e3": "A explicação começa dizendo se é pessoa, animal, prédio ou máquina. Comece por aí.",
+ "dica16_e4": "A explicação começa dizendo se é pessoa, animal, prédio ou máquina. Comece por aí.",
+ "dica16_e5": "A explicação começa dizendo se é pessoa, animal, prédio ou máquina. Comece por aí.",
+ "dica16_e6": "A explicação começa dizendo se é pessoa, animal, prédio ou máquina. Comece por aí.",
+ "dica17_u1": "Pergunte: o que vem logo depois do pronome é uma coisa DE alguém?",
+ "dica17_u2": "Pergunte: o que vem logo depois do pronome é uma coisa DE alguém?",
+ "dica17_u3": "Pergunte: o que vem logo depois do pronome é uma coisa DE alguém?",
+ "dica17_u4": "Pergunte: o que vem logo depois do pronome é uma coisa DE alguém?",
+ "dica17_u5": "Pergunte: o que vem logo depois do pronome é uma coisa DE alguém?",
+ "dica17_u6": "Pergunte: o que vem logo depois do pronome é uma coisa DE alguém?",
+ "dica18_z1": "O pedaço com o pronome entra logo depois da pessoa ou da coisa que ele explica.",
+ "dica18_z2": "O pedaço com o pronome entra logo depois da pessoa ou da coisa que ele explica.",
+ "dica18_z3": "O pedaço com o pronome entra logo depois da pessoa ou da coisa que ele explica.",
+ "dica18_z4": "O pedaço com o pronome entra logo depois da pessoa ou da coisa que ele explica.",
+ "dica18_z5": "O pedaço com o pronome entra logo depois da pessoa ou da coisa que ele explica.",
+ "dica18_z6": "O pedaço com o pronome entra logo depois da pessoa ou da coisa que ele explica.",
+ "dica19_x1": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém? E lembre: aqui nunca é that.",
+ "dica19_x2": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém? E lembre: aqui nunca é that.",
+ "dica19_x3": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém? E lembre: aqui nunca é that.",
+ "dica19_x4": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém? E lembre: aqui nunca é that.",
+ "dica19_x5": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém? E lembre: aqui nunca é that.",
+ "dica19_x6": "Depois da lacuna vem um verbo, ou vem uma coisa que é de alguém? E lembre: aqui nunca é that.",
+ "dica1_q1": "Pense: dá para contar um, dois, três dessa coisa?",
+ "dica1_q2": "Pense: dá para contar um, dois, três dessa coisa?",
+ "dica1_q3": "Pense: dá para contar um, dois, três dessa coisa?",
+ "dica1_q4": "Pense: dá para contar um, dois, três dessa coisa?",
+ "dica1_q5": "Pense: dá para contar um, dois, três dessa coisa?",
+ "dica1_q6": "Pense: dá para contar um, dois, três dessa coisa?",
+ "dica1_q7": "Pense: dá para contar um, dois, três dessa coisa?",
+ "dica1_q8": "Pense: dá para contar um, dois, três dessa coisa?",
+ "dica20_0": "Volte ao texto e leia de novo a parte que fala disso.",
+ "dica20_1": "Volte ao texto e leia de novo a parte que fala disso.",
+ "dica20_2": "Volte ao texto e leia de novo a parte que fala disso.",
+ "dica20_3": "Volte ao texto e leia de novo a parte que fala disso.",
+ "dica20_4": "Volte ao texto e leia de novo a parte que fala disso.",
+ "dica21": "Sobrou alguma marcada que dá para contar, ou faltou marcar alguma que não dá. Confira uma por uma.",
+ "dica2_g1": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g10": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g11": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g12": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g2": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g3": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g4": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g5": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g6": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g7": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g8": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica2_g9": "Tente dizer dois desses em inglês. Se soar estranho, é a outra gaveta.",
+ "dica3_h1": "Olhe o fim da palavra: tem s de plural? E tem o a ou o an na frente?",
+ "dica3_h2": "Olhe o fim da palavra: tem s de plural? E tem o a ou o an na frente?",
+ "dica3_h3": "Olhe o fim da palavra: tem s de plural? E tem o a ou o an na frente?",
+ "dica3_h4": "Olhe o fim da palavra: tem s de plural? E tem o a ou o an na frente?",
+ "dica3_h5": "Olhe o fim da palavra: tem s de plural? E tem o a ou o an na frente?",
+ "dica3_h6": "Olhe o fim da palavra: tem s de plural? E tem o a ou o an na frente?",
+ "dica3_h7": "Olhe o fim da palavra: tem s de plural? E tem o a ou o an na frente?",
+ "dica3_h8": "Olhe o fim da palavra: tem s de plural? E tem o a ou o an na frente?",
+ "dica3_h9": "Olhe o fim da palavra: tem s de plural? E tem o a ou o an na frente?",
+ "dica4_m1": "Nesta frase há uma de cada. Leia devagar e ache os nomes das coisas.",
+ "dica4_m2": "Nesta frase há uma de cada. Leia devagar e ache os nomes das coisas.",
+ "dica4_m3": "Nesta frase há uma de cada. Leia devagar e ache os nomes das coisas.",
+ "dica4_m4": "Nesta frase há uma de cada. Leia devagar e ache os nomes das coisas.",
+ "dica4_m5": "Nesta frase há uma de cada. Leia devagar e ache os nomes das coisas.",
+ "dica4_m6": "Nesta frase há uma de cada. Leia devagar e ache os nomes das coisas.",
+ "dica4_m7": "Nesta frase há uma de cada. Leia devagar e ache os nomes das coisas.",
+ "dica5_s1": "A frase diz que TEM. Olhe o começo dela outra vez.",
+ "dica5_s10": "Esta é a exceção. Olhe o começo dela outra vez.",
+ "dica5_s11": "A frase PERGUNTA. Olhe o começo dela outra vez.",
+ "dica5_s12": "A frase diz que TEM. Olhe o começo dela outra vez.",
+ "dica5_s2": "A frase NEGA. Olhe o começo dela outra vez.",
+ "dica5_s3": "A frase diz que TEM. Olhe o começo dela outra vez.",
+ "dica5_s4": "A frase PERGUNTA. Olhe o começo dela outra vez.",
+ "dica5_s5": "A frase NEGA. Olhe o começo dela outra vez.",
+ "dica5_s6": "A frase NEGA. Olhe o começo dela outra vez.",
+ "dica5_s7": "A frase diz que TEM. Olhe o começo dela outra vez.",
+ "dica5_s8": "A frase NEGA. Olhe o começo dela outra vez.",
+ "dica5_s9": "Esta é a exceção. Olhe o começo dela outra vez.",
+ "dica6_v1": "Duas perguntas: essa coisa se conta? E a frase nega ou pergunta?",
+ "dica6_v2": "Duas perguntas: essa coisa se conta? E a frase nega ou pergunta?",
+ "dica6_v3": "Duas perguntas: essa coisa se conta? E a frase nega ou pergunta?",
+ "dica6_v4": "Duas perguntas: essa coisa se conta? E a frase nega ou pergunta?",
+ "dica6_v5": "Duas perguntas: essa coisa se conta? E a frase nega ou pergunta?",
+ "dica6_v6": "Duas perguntas: essa coisa se conta? E a frase nega ou pergunta?",
+ "dica7_n1": "Se dá para contar, é uma. Se não dá, é a outra.",
+ "dica7_n2": "Se dá para contar, é uma. Se não dá, é a outra.",
+ "dica7_n3": "Se dá para contar, é uma. Se não dá, é a outra.",
+ "dica7_n4": "Se dá para contar, é uma. Se não dá, é a outra.",
+ "dica7_n5": "Se dá para contar, é uma. Se não dá, é a outra.",
+ "dica7_n6": "Se dá para contar, é uma. Se não dá, é a outra.",
+ "dica7_n7": "Se dá para contar, é uma. Se não dá, é a outra.",
+ "dica7_n8": "Se dá para contar, é uma. Se não dá, é a outra.",
+ "dica8_j1": "Olhe o fim das palavras: tem s onde não devia, ou falta s onde devia?",
+ "dica8_j2": "Olhe o fim das palavras: tem s onde não devia, ou falta s onde devia?",
+ "dica8_j3": "Olhe o fim das palavras: tem s onde não devia, ou falta s onde devia?",
+ "dica8_j4": "Olhe o fim das palavras: tem s onde não devia, ou falta s onde devia?",
+ "dica8_j5": "Olhe o fim das palavras: tem s onde não devia, ou falta s onde devia?",
+ "dica8_j6": "Olhe o fim das palavras: tem s onde não devia, ou falta s onde devia?",
+ "dica8_j7": "Olhe o fim das palavras: tem s onde não devia, ou falta s onde devia?",
+ "dica8_j8": "Olhe o fim das palavras: tem s onde não devia, ou falta s onde devia?",
+ "dica9_d1": "Quem está falando: quem pergunta, quem diz que tem, ou quem nega?",
+ "dica9_d2": "Quem está falando: quem pergunta, quem diz que tem, ou quem nega?",
+ "dica9_d3": "Quem está falando: quem pergunta, quem diz que tem, ou quem nega?",
+ "dica9_d4": "Quem está falando: quem pergunta, quem diz que tem, ou quem nega?",
+ "dica9_d5": "Quem está falando: quem pergunta, quem diz que tem, ou quem nega?",
+ "dica9_d6": "Quem está falando: quem pergunta, quem diz que tem, ou quem nega?",
+ "dica9_d7": "Quem está falando: quem pergunta, quem diz que tem, ou quem nega?",
+ "diz21_y1": "money.",
+ "diz21_y10": "ticket.",
+ "diz21_y11": "milk.",
+ "diz21_y12": "dress.",
+ "diz21_y2": "key.",
+ "diz21_y3": "water.",
+ "diz21_y4": "book.",
+ "diz21_y5": "music.",
+ "diz21_y6": "suitcase.",
+ "diz21_y7": "rice.",
+ "diz21_y8": "camera.",
+ "diz21_y9": "time.",
+ "diz2_cp1_g1": "suitcase.",
+ "diz2_cp1_g10": "time.",
+ "diz2_cp1_g11": "book.",
+ "diz2_cp1_g12": "water.",
+ "diz2_cp1_g2": "luggage.",
+ "diz2_cp1_g3": "ticket.",
+ "diz2_cp1_g4": "money.",
+ "diz2_cp1_g5": "camera.",
+ "diz2_cp1_g6": "music.",
+ "diz2_cp1_g7": "key.",
+ "diz2_cp1_g8": "information.",
+ "diz2_cp1_g9": "umbrella.",
+ "diz2_cp2_h1": "a camera.",
+ "diz2_cp2_h2": "cameras.",
+ "diz2_cp2_h3": "an umbrella.",
+ "diz2_cp2_h4": "umbrellas.",
+ "diz2_cp2_h5": "a key.",
+ "diz2_cp2_h6": "keys.",
+ "diz2_cp2_h7": "sand.",
+ "diz2_cp2_h8": "money.",
+ "diz2_cp2_h9": "milk.",
+ "dlg_0": "Clerk: Good morning. Can I help you?",
+ "dlg_1": "Anna: Yes, please. Is there blank black bag here?",
+ "dlg_2": "Clerk: We have blank black bags. What is inside yours?",
+ "dlg_3": "Anna: There is blank money and there are blank keys.",
+ "dlg_4": "Clerk: How blank money?",
+ "dlg_5": "Anna: About fifty reais. And how blank keys are in this one?",
+ "dlg_6": "Clerk: I am sorry. There aren't blank keys in this bag.",
+ "dlgtit": "Anna perdeu a bolsa no aeroporto e foi ao balcão de achados e perdidos.",
+ "dupla_m1": "Can you pass me a piece of paper?",
+ "dupla_m2": "The teacher gave us some homework.",
+ "dupla_m3": "He drank a glass of milk.",
+ "dupla_m4": "There is too much noise in the classroom.",
+ "dupla_m5": "They bought new furniture for the house.",
+ "dupla_m6": "There is a suitcase with some luggage inside.",
+ "dupla_m7": "She lost her camera and all her money.",
+ "esc_x1": "My dad, blank travels a lot on business, is in Australia.",
+ "esc_x2": "He is the young man, blank wife left him for someone else.",
+ "esc_x3": "We stayed at the Rockstar hotel, blank also had a swimming pool.",
+ "esc_x4": "I have to buy a present for my mother, blank birthday is next week.",
+ "esc_x5": "Columbus, blank was born in Italy, sailed to America in 1492.",
+ "esc_x6": "Queen Victoria, blank husband was Albert, became Empress of India.",
+ "escreva": "Escreva a palavra usando o teclado.",
+ "fim": "Você chegou ao fim do balcão! Agora você sabe dizer quanto tem dentro da mala e de quem ela é. E fica a pergunta: o que é que mais se perde na sua casa? Escreva no caderno, em inglês: I lost a ... which ...",
+ "folhaPronta": "Folha pronta! Muito bem.",
+ "frase_q1": "There is blank luggage in the car.",
+ "frase_q2": "There is blank suitcase in the bedroom.",
+ "frase_q3": "There is blank sand in my shoe.",
+ "frase_q4": "There is blank magazine in the living room.",
+ "frase_q5": "There is blank jam in the cupboard.",
+ "frase_q6": "There is blank toothbrush in the bathroom.",
+ "frase_q7": "There is blank flour in the cupboard.",
+ "frase_q8": "There is blank bicycle outside.",
+ "gav_cp1_c": "I can count it.",
+ "gav_cp1_u": "I cannot count it.",
+ "gav_cp2_p": "more than one.",
+ "gav_cp2_s": "one of them.",
+ "gav_cp2_u": "I cannot count it.",
+ "hist_hamlet": "William Shakespeare is the man who wrote Hamlet. He was an English poet whose birthplace was Stratford-upon-Avon. The Globe Theatre, which was built in London, is the theatre that showed his plays. Today there is a replica which visitors can see. Shakespeare, who died in 1616, wrote 37 plays. There isn't any other English writer who is more famous.",
+ "jul_j1": "These carrot are sweet.",
+ "jul_j2": "There is some water in the bottle.",
+ "jul_j3": "There is much waters in this jar.",
+ "jul_j4": "How many suitcases have you got?",
+ "jul_j5": "How many sandwich have you bought?",
+ "jul_j6": "I don't like tea at all.",
+ "jul_j7": "Don't put more salts in this dish.",
+ "jul_j8": "There are four chairs round the table.",
+ "julp_u1": "This is the bank that was robbed yesterday.",
+ "julp_u2": "A boy who sister is in my class was in the bank.",
+ "julp_u3": "The book which I gave you had many pictures.",
+ "julp_u4": "Charlie Chaplin, who died in 1977, was a famous star of the cinema.",
+ "julp_u5": "This is a book which pages are dirty.",
+ "julp_u6": "The woman who gave him the money was young.",
+ "jun_z1": "She worked for a man. The man used to be an athlete.",
+ "jun_z2": "We've broken the computer. The computer belonged to my father.",
+ "jun_z3": "They called a lawyer. The lawyer lived nearby.",
+ "jun_z4": "The kangaroo is an animal. It lives in Australia.",
+ "jun_z5": "Leonardo Da Vinci was an artist. He painted the Mona Lisa.",
+ "jun_z6": "The dog chased me. His owner is Ms Nora.",
+ "ligue": "Toque numa palavra do lado esquerdo e depois na do lado direito.",
+ "mala_v1": "There is blank old suitcase at the desk.",
+ "mala_v2": "There is blank mouse inside this bag!",
+ "mala_v3": "There is blank money in the wallet.",
+ "mala_v4": "Is there blank music on this phone?",
+ "mala_v5": "There aren't blank matches in the box.",
+ "mala_v6": "There is blank tea in the cup.",
+ "marca_c": "Marca do que se conta.",
+ "marca_u": "Marca do que não se conta.",
+ "mm_n1": "How blank oranges did you buy?",
+ "mm_n2": "How blank sugar do you need?",
+ "mm_n3": "How blank children do they have?",
+ "mm_n4": "How blank cheese have you got?",
+ "mm_n5": "How blank chairs are there in the room?",
+ "mm_n6": "How blank water do you drink a day?",
+ "mm_n7": "How blank days does a leap year have?",
+ "mm_n8": "How blank flour do we need for the pie?",
+ "op_a": "a.",
+ "op_an": "an.",
+ "op_any": "any.",
+ "op_certa": "Está certa.",
+ "op_erro": "Tem erro.",
+ "op_many": "many.",
+ "op_much": "much.",
+ "op_some": "some.",
+ "op_which": "which.",
+ "op_who": "who.",
+ "op_whose": "whose.",
+ "p10enun": "Folha dez. Esta é a resposta. Monte a pergunta tocando nos pedaços na ordem certa.",
+ "p11enun": "Folha onze. Toque na pergunta e depois na resposta que combina com ela.",
+ "p12enun": "Folha doze. Em cada frase há um pronome relativo. Toque nele.",
+ "p13enun": "Folha treze. Olhe a palavra que vem antes da lacuna: é gente ou é coisa?",
+ "p14enun": "Folha catorze. Agora são três. Se a coisa depois da lacuna é de alguém, o pronome é outro.",
+ "p15enun": "Folha quinze. Olhe a palavra que vem depois da lacuna: se for uma coisa de alguém, é whose.",
+ "p16enun": "Folha dezesseis. Toque no nome e depois na explicação dele.",
+ "p17enun": "Folha dezessete. Olhe o pronome em negrito. Ele está no lugar certo?",
+ "p18enun": "Folha dezoito. Junte as duas frases numa só. Toque nos pedaços na ordem certa.",
+ "p19enun": "Folha dezenove. Escreva o pronome que falta. Repare: toda frase aqui tem vírgula, e depois de vírgula o inglês nunca usa that.",
+ "p1enun": "Folha um. Leia a frase e escolha a palavra que falta: a, ou some.",
+ "p20enun": "Folha vinte. Agora responda sobre o texto.",
+ "p21enun": "Folha vinte e um. Marque todas as palavras que não se contam. Depois toque em Conferir.",
+ "p22enun": "Folha vinte e dois. Escolha as regras que você quer no seu cartaz. Pode escolher quantas quiser.",
+ "p2enun": "Folha dois. Uma gaveta é do que se pode contar. A outra é do que não se conta em unidades.",
+ "p3enun": "Folha três. Agora são três gavetas. Olhe se a palavra está no singular, no plural, ou se nem tem plural.",
+ "p4enun": "Folha quatro. Escolha a marca e toque na palavra: o que se conta, ou o que não se conta.",
+ "p5enun": "Folha cinco. Olhe se a frase diz que tem, se ela nega ou se ela pergunta. Depois escolha.",
+ "p6enun": "Folha seis. Olhe a figura e escolha: a, an, some ou any.",
+ "p7enun": "Folha sete. Olhe a palavra que vem depois da lacuna: ela se conta ou não?",
+ "p8enun": "Folha oito. Esta frase em inglês está certa, ou tem alguma coisa errada?",
+ "p9enun": "Folha nove. Preencha a conversa: some, any, much ou many.",
+ "perg_w1": "There is some money in the bag.",
+ "perg_w2": "There are some keys in the box.",
+ "perg_w3": "There is some water in the bottle.",
+ "perg_w4": "There are some books in the suitcase.",
+ "pergh_0": "Who wrote Hamlet?",
+ "pergh_1": "Por que é whose em an English poet whose birthplace was Stratford?",
+ "pergh_2": "Por que é which em The Globe Theatre, which was built in London?",
+ "pergh_3": "How many plays did Shakespeare write?",
+ "pergh_4": "Por que é any em There isn't any other English writer?",
+ "po_o1": "I talked to the girl blank car had broken down.",
+ "po_o2": "That's Peter, the boy blank has just arrived at the airport.",
+ "po_o3": "The man, blank father is a professor, forgot his umbrella.",
+ "po_o4": "The children blank shouted in the street are not from our school.",
+ "po_o5": "Look at the girl blank hair is black and shiny.",
+ "po_o6": "This is the girl blank comes from Spain.",
+ "quase": "Quase! Olhe de novo e tente outra.",
+ "rd_r1": "There are three.",
+ "rd_r2": "There is fifty reais.",
+ "rd_r3": "No, there isn't.",
+ "rd_r4": "Yes, there are two.",
+ "rd_r5": "Yes, there is one.",
+ "rd_r6": "No, there aren't.",
+ "resph_0_0": "The Globe Theatre",
+ "resph_0_1": "William Shakespeare",
+ "resph_0_2": "Stratford-upon-Avon",
+ "resph_1_0": "porque a cidade é o lugar onde ele nasceu — é DELE",
+ "resph_1_1": "porque poeta é uma pessoa",
+ "resph_1_2": "porque a frase é negativa",
+ "resph_2_0": "porque teatro é gente",
+ "resph_2_1": "porque teatro é coisa",
+ "resph_2_2": "porque tem vírgula",
+ "resph_3_0": "16",
+ "resph_3_1": "37",
+ "resph_3_2": "1616",
+ "resph_4_0": "porque a frase é negativa",
+ "resph_4_1": "porque escritor se conta",
+ "resph_4_2": "porque é um pedido",
+ "rp_r1": "How many suitcases are there?",
+ "rp_r2": "How much money is there?",
+ "rp_r3": "Is there any milk in the bottle?",
+ "rp_r4": "Are there any keys in the bag?",
+ "rp_r5": "Is there a camera in the suitcase?",
+ "rp_r6": "Are there any tickets on the desk?",
+ "sa_s1": "There is blank milk in the fridge.",
+ "sa_s10": "Would you like blank sugar in your tea?",
+ "sa_s11": "Do you have blank brothers or sisters?",
+ "sa_s12": "I have blank news for you.",
+ "sa_s2": "We don't need blank flour.",
+ "sa_s3": "There are blank cats in the garden.",
+ "sa_s4": "Are there blank eggs in the fridge?",
+ "sa_s5": "I don't have blank money.",
+ "sa_s6": "There aren't blank oranges on the table.",
+ "sa_s7": "There is blank money in my wallet.",
+ "sa_s8": "We don't have blank bananas.",
+ "sa_s9": "Can I have blank water, please?",
+ "toque_marca": "Primeiro escolha uma das duas marcas ali em cima.",
+ "toque_palavra": "Primeiro toque numa palavra ali embaixo. Depois toque na gaveta dela.",
+ "tres_t1": "The man blank works in the store is my uncle.",
+ "tres_t2": "I met a woman blank brother is a famous artist.",
+ "tres_t3": "I saw a movie blank was very exciting.",
+ "tres_t4": "He is the student blank father is the principal.",
+ "tres_t5": "The person blank called you is waiting outside.",
+ "tres_t6": "The book blank you lent me is on the table.",
+ "vozOn": "Narração ligada!",
+ "ww_p1": "The boy blank drives that car is very rich.",
+ "ww_p2": "Tigers are animals blank live in India.",
+ "ww_p3": "The girl blank has a red hat is in my class.",
+ "ww_p4": "A pen is an object blank I use to write with.",
+ "ww_p5": "Children blank don't study don't pass the exams.",
+ "ww_p6": "The test blank we are doing is very difficult."
+};
+/*FALAS-FIM*/
+/*VOZOK-INI*/var VOZOK = {"1elqk6o": 1, "by0gsm": 1, "yyz321": 1, "wjhyjj": 1, "12ipkbk": 1, "ctfu6b": 1, "1po6qub": 1, "1v319od": 1, "ly6jhu": 1, "lqnd1w": 1, "1w93ou3": 1, "1je45zv": 1, "lctjy4": 1, "1nk7m9z": 1, "1efdfi": 1, "1skpvbs": 1, "lwekcv": 1, "h64w6l": 1, "npq68k": 1, "itbnt0": 1, "1esjla1": 1, "1vnenqa": 1, "1ohswk": 1, "14p7sw4": 1, "1h3lnrz": 1, "1mhnmph": 1, "y1u6vz": 1, "1tkisdf": 1, "25cf3": 1, "1ykzq6s": 1, "zc6zb": 1, "157ddw8": 1, "1q4ixdv": 1, "3e61iv": 1, "br0a5q": 1, "urib59": 1, "bw2q0a": 1, "e2jxpi": 1, "12xi30q": 1, "15kozeu": 1, "1df79is": 1, "rkun4k": 1, "l4ve5k": 1, "1i33i2t": 1, "1pzukb4": 1, "b0pi0t": 1, "kh7fc0": 1, "10wjpox": 1, "wt521c": 1, "isoiqs": 1, "1g1sir1": 1, "8koz4h": 1, "8rx2jt": 1, "18n8b59": 1, "11q2u56": 1, "1gwcsf5": 1, "vc3kg6": 1, "14irufp": 1, "137m8tx": 1, "sh3uz3": 1, "mrd86": 1, "1mgta0i": 1, "1u38qfk": 1, "1mkw33n": 1, "q3yzp1": 1, "1gfixdu": 1, "2x66ny": 1, "1mlcmlu": 1, "8bzlop": 1, "1l9jv7v": 1, "rge6hy": 1, "pzbpaq": 1, "1q39hr2": 1, "xyzzfu": 1, "164hy1d": 1, "1yxqrm6": 1, "a7vdyk": 1, "15l6czr": 1, "faqmf8": 1, "1ueeumi": 1, "1bbr1im": 1, "1pg2xas": 1, "8chg75": 1, "14tooqw": 1, "1e0lak4": 1, "haseyo": 1, "1uo2fw8": 1, "15t3n8r": 1, "1d16se4": 1, "ofh3hb": 1, "1hhu1hp": 1, "c9cv2d": 1, "s42x9l": 1, "itian": 1, "o8zlsr": 1, "wr9p5b": 1, "2vqgg8": 1, "ipxlqw": 1, "yj63q4": 1, "x6qlq6": 1, "2wkaiq": 1, "olaega": 1, "5zuzvo": 1, "382l7a": 1, "1lpvpte": 1, "313ftq": 1, "t6h29d": 1, "1nl3smf": 1, "1d3qykn": 1, "1frbh4j": 1, "1lx56w1": 1, "frugfc": 1, "1lr8jlg": 1, "mtmzst": 1, "32sgzz": 1, "38iuer": 1, "1ktfomv": 1, "yuolt0": 1, "dqggo1": 1, "35g83m": 1, "1cdgrzt": 1, "1hj33e5": 1, "1gsfkyq": 1, "1fp18ga": 1, "p7zfmw": 1, "1mdv4pj": 1, "1y8vtat": 1, "b529hl": 1, "1lkk24i": 1, "1mxi3gh": 1, "1iiieya": 1, "p3d6xj": 1, "1qg66wl": 1, "1g0ai4a": 1, "4qmf33": 1, "1xdy8xf": 1, "7y4xlk": 1, "s69mtb": 1, "9lri6q": 1, "1d9s73k": 1, "1x00e9t": 1, "1i5g4wo": 1, "nqfqq7": 1, "1pvmi1h": 1, "ly1w35": 1, "1xdh459": 1, "y0hlyt": 1, "cmp4fv": 1, "wddkb4": 1, "yyb62t": 1, "3o80q1": 1, "y38owi": 1, "1cznyue": 1, "1wearmj": 1, "1lnl544": 1, "demzte": 1, "m8vm6g": 1, "mimjja": 1, "14yfw9n": 1, "tzpcd3": 1, "1o7bjdm": 1, "5bu620": 1, "1a67hwe": 1, "1knh7kg": 1, "mtrhpb": 1, "1f1yu1y": 1, "yhsorr": 1, "18d3jnt": 1, "u830j7": 1, "1xjziq7": 1, "1euuq78": 1, "kdd3ut": 1, "1wqw8px": 1, "1oaaion": 1, "pstc2w": 1, "1f5ztz9": 1, "1dzye9o": 1, "kbjt3y": 1, "hjijqi": 1, "13s2xjx": 1, "1nx9i3g": 1, "1l7hm66": 1, "sdqv2f": 1, "1v1jbjk": 1, "1ttgcle": 1, "1wmqmd4": 1, "1xf4n6j": 1, "181hql6": 1, "xeu8qm": 1, "4y935b": 1, "3hmcq": 1, "375g04": 1, "yivkv1": 1, "1v0aafd": 1, "1kb82xp": 1, "2vwej4": 1, "2wbq0o": 1, "38n5pb": 1, "xd46ja": 1, "yj9h7f": 1, "xd2g4t": 1, "1ffl5vm": 1, "12juo42": 1, "uto10s": 1, "1astme3": 1, "b018z6": 1, "1tnkr55": 1, "1y131wd": 1, "1xc20gh": 1, "dxw5ez": 1, "in0q1v": 1, "xui9bq": 1, "wom4zb": 1, "ir0r0h": 1, "hw0pb6": 1, "13tfhow": 1, "1es6esd": 1, "1nhypwg": 1, "ew43f5": 1, "1rlfsz6": 1, "1gnlcw8": 1, "qtqvdh": 1, "1vjmimf": 1, "1ozmf4x": 1, "oujroo": 1, "csxih8": 1, "13v4unc": 1, "15kh5sw": 1, "3v2c46": 1, "1a9ifcm": 1, "1qotefb": 1, "zj42ux": 1, "2vd22h": 1, "1fpbv5z": 1, "yrzceh": 1, "1w0hyjf": 1, "1l8jyy8": 1, "1m135nc": 1, "1wv6arh": 1, "1hazbyv": 1, "dyervz": 1, "r60i1o": 1, "7u2ss8": 1, "9zp7s3": 1, "133ip0k": 1, "oi0u7u": 1, "qbbl6w": 1, "1503uez": 1, "xbydp": 1, "qdhqbp": 1, "hut290": 1, "hs13im": 1, "hg01v": 1, "3hl42": 1, "3hl5t": 1, "yhvlad": 1, "buax5b": 1, "1iwxxor": 1, "10vm55h": 1, "htgkyl": 1, "10gg4w1": 1, "136ttca": 1, "3sjssn": 1, "10am3eq": 1, "qsf6cz": 1, "hlsn3d": 1, "1kysk3l": 1, "1y2f5k5": 1, "10gxdgt": 1, "1pfsd5": 1, "8xkf8b": 1, "1xml1uc": 1, "1s76uip": 1, "1bt5pt": 1, "fv99lb": 1, "jdqobc": 1, "vasocq": 1, "qqiw6i": 1, "1glw82e": 1, "xo2duy": 1, "anm76y": 1, "1ld8zff": 1, "gx0889": 1, "bcpf11": 1, "swkns7": 1, "11nlhjs": 1, "y8349y": 1, "jbu9a2": 1, "1iq3v9": 1, "1faeiev": 1, "1gjqyo9": 1};/*VOZOK-FIM*/
+
+/* ============================================================
+   OS DADOS DO CADERNO — tudo em JSON puro, num bloco marcado.
+   ⚠️ POR QUE JSON E NÃO OBJETO SOLTO: o `gerar_falas.py` LÊ ESTE BLOCO para
+   escrever as falas. Se os dados vivessem em dois lugares (aqui e lá), a voz
+   diria uma coisa e a tela mostraria outra — que é o defeito que o `falas.json`
+   existe para matar. Um lugar só, lido pelos dois.
+   ============================================================ */
+/*DADOS-INI*/
+/* ============================================================
+   OS DADOS DAS FOLHAS — o conteúdo deste caderno, e só dele.
+
+   ⚠️ TUDO O QUE ENTRAR AQUI TEM DE VIR DE UMA FOLHA DE PAPEL COLHIDA, e o crivo
+      (comando impresso VERBATIM + veredito de cada uma das trinta) mora em
+      `_sequencias/POTE-<assunto>.md`. Bloco que NÃO vier do papel entra
+      declarado, com o motivo escrito ao lado dele.
+   ⚠️ E A CHAVE NÃO PODE SER A PALAVRA QUE APARECE NA TELA: o portão
+      `_qa/resposta_impressa.py` lê a resposta declarada dentro do texto visível
+      e acusa, com razão. Chave é `c1`, `g3`, `j2` — número, não palavra.
+   ⚠️ CAMPO DE TECLADO: gabarito de UMA palavra só (o teclado da casa não tem
+      barra de espaço) e sem acento, se o que a folha mede não for o acento.
+
+   ⭐ O MUNDO DESTE CADERNO: o **balcão de achados e perdidos** de um aeroporto,
+      e a criança é quem atende. Ele não é enfeite — ele é o que junta os dois
+      conteúdos do currículo numa lógica só, e isso não foi escolha de gosto:
+        · abrir a mala e dizer o que tem dentro É o quantificador
+          (*there is some money · there aren't any keys · how much · how many*);
+        · devolver a mala ao dono É o pronome relativo
+          (*the woman WHO called yesterday · the bag WHICH has a red tag · the
+           man WHOSE flight was cancelled*) — identificar alguém por uma oração
+          é a razão de o pronome relativo existir.
+      E ele é de OITAVO ANO: aeroporto, balcão, formulário — não fazendinha.
+
+   ⚠️ A ORIGEM DE CADA BLOCO ESTÁ ESCRITA AO LADO DELE (`d12`, `b05`…), e o
+      crivo inteiro — comando impresso VERBATIM e veredito das 54 folhas — está
+      em `_sequencias/POTE-ING8.md`. Onde a frase é MINHA, está dito.
+   ============================================================ */
+
+/* ---------- 1 · A or SOME? (da d12, VERBATIM: *"Complete the sentences using
+   either 'a' or 'some':"*) ----------
+   ⭐ ABRE PELO PROBLEMA, não pela regra: a criança lê *"There is ___ luggage in
+      the car"*, põe `a`, e a frase sai torta no ouvido dela antes de existir
+      qualquer explicação. O par `luggage`×`suitcase` é o coração da folha: é a
+      MESMA coisa do mundo, e uma se conta e a outra não. */
+var QUANT = {
+ q1: {a: "There is", b: "luggage in the car.", r: "some",
+      pq: "luggage é a bagagem toda junta: ninguém diz *one luggage*."},
+ q2: {a: "There is", b: "suitcase in the bedroom.", r: "a",
+      pq: "suitcase é UMA mala — dá para contar duas, três."},
+ q3: {a: "There is", b: "sand in my shoe.", r: "some",
+      pq: "areia não se conta em unidades: são grãos demais."},
+ q4: {a: "There is", b: "magazine in the living room.", r: "a",
+      pq: "uma revista, duas revistas: conta-se."},
+ q5: {a: "There is", b: "jam in the cupboard.", r: "some",
+      pq: "geleia é massa: o vidro se conta, a geleia não."},
+ q6: {a: "There is", b: "toothbrush in the bathroom.", r: "a",
+      pq: "uma escova, duas escovas: conta-se."},
+ q7: {a: "There is", b: "flour in the cupboard.", r: "some",
+      pq: "farinha é pó: mede-se em quilos, não em unidades."},
+ q8: {a: "There is", b: "bicycle outside.", r: "a",
+      pq: "uma bicicleta, duas bicicletas: conta-se."}
+};
+
+/* ---------- 2 e 3 · AS GAVETAS (da d04, VERBATIM: *"Countable or Uncountable?
+   Write the following nouns under the correct column."*; e da d09, VERBATIM:
+   *"Complete the lists on the bags."*, com TRÊS sacolas) ----------
+   ⭐ E VÊM COLADAS, subindo um degrau (regra do Marcos contra o *"isso eu já
+      fiz"*): na 2 são duas gavetas; na 3 são três, e a do meio separa o
+      singular do plural — que é justamente onde o `some` muda de sentido.
+   ⭐ AS PALAVRAS SÃO AS DO BALCÃO e os INCONTÁVEIS ABSTRATOS vêm da d24
+      (*music, time, homework, money, information, furniture*): é isso que
+      separa o 8º ano do 5º — sem eles o caderno vira aula de comida. */
+var GAV = {
+ cp1: {cols: [{k: "c", n: "I can count it"}, {k: "u", n: "I cannot count it"}],
+       pal: {
+        g1: {p: "suitcase", c: "c"}, g2: {p: "luggage", c: "u"},
+        g3: {p: "ticket", c: "c"},   g4: {p: "money", c: "u"},
+        g5: {p: "camera", c: "c"},   g6: {p: "music", c: "u"},
+        g7: {p: "key", c: "c"},      g8: {p: "information", c: "u"},
+        g9: {p: "umbrella", c: "c"}, g10: {p: "time", c: "u"},
+        g11: {p: "book", c: "c"},    g12: {p: "water", c: "u"}}},
+ cp2: {cols: [{k: "s", n: "one of them"}, {k: "p", n: "more than one"},
+              {k: "u", n: "I cannot count it"}],
+       pal: {
+        h1: {p: "a camera", c: "s"},  h2: {p: "cameras", c: "p"},
+        h3: {p: "an umbrella", c: "s"}, h4: {p: "umbrellas", c: "p"},
+        h5: {p: "a key", c: "s"},     h6: {p: "keys", c: "p"},
+        h7: {p: "sand", c: "u"},      h8: {p: "money", c: "u"},
+        h9: {p: "milk", c: "u"}}}
+};
+
+/* ---------- 4 · CIRCLE AND UNDERLINE (da d28, VERBATIM: *"Circle the countable
+   nouns and underline the uncountable nouns in the following sentences."*) ----
+   ⭐ GESTO QUE SÓ ELA PEDE nas 54 folhas: duas marcas diferentes na MESMA frase.
+      Obriga a criança a achar o substantivo dentro do texto — não numa lista —
+      e a decidir duas vezes seguidas.
+   ⚠️ As cinco primeiras são frases da d28. As duas últimas são MINHAS, no mesmo
+      molde e com as palavras do balcão, porque as outras frases dela têm dois
+      contáveis ou dois incontáveis e não serviriam para a folha de DOIS tipos. */
+var DUPLA = {
+ m1: {palavras: ["Can", "you", "pass", "me", "a", "piece", "of", "paper?"],
+      cont: "piece", inc: "paper"},
+ m2: {palavras: ["The", "teacher", "gave", "us", "some", "homework."],
+      cont: "teacher", inc: "homework"},
+ m3: {palavras: ["He", "drank", "a", "glass", "of", "milk."],
+      cont: "glass", inc: "milk"},
+ m4: {palavras: ["There", "is", "too", "much", "noise", "in", "the", "classroom."],
+      cont: "classroom", inc: "noise"},
+ m5: {palavras: ["They", "bought", "new", "furniture", "for", "the", "house."],
+      cont: "house", inc: "furniture"},
+ m6: {palavras: ["There", "is", "a", "suitcase", "with", "some", "luggage", "inside."],
+      cont: "suitcase", inc: "luggage"},
+ m7: {palavras: ["She", "lost", "her", "camera", "and", "all", "her", "money."],
+      cont: "camera", inc: "money"}
+};
+
+/* ---------- 5 · SOME or ANY? (da d30, VERBATIM: *"Choose the correct
+   answers."*, dezesseis frases de `some / any`) ----------
+   ⭐ As três situações vêm juntas de propósito — afirmativa, negativa e
+      pergunta — porque é a SITUAÇÃO que manda, não a palavra.
+   ⚠️ E as duas exceções entram declaradas: *Can I have…?* e *Would you like…?*
+      levam `some` mesmo sendo perguntas, porque são PEDIDO e OFERTA. Está no
+      cartaz da d07 (*"some — It is also used in questions for offers and
+      requests"*) e é o que o aluno usa na vida: pedir e oferecer. */
+var SOMEANY = {
+ s1: {f: "There is ___ milk in the fridge.", r: "some", t: "a",
+      pq: "frase que diz que TEM: some."},
+ s2: {f: "We don't need ___ flour.", r: "any", t: "n",
+      pq: "frase com don't: any."},
+ s3: {f: "There are ___ cats in the garden.", r: "some", t: "a",
+      pq: "frase que diz que TEM: some."},
+ s4: {f: "Are there ___ eggs in the fridge?", r: "any", t: "p",
+      pq: "pergunta de quem não sabe a resposta: any."},
+ s5: {f: "I don't have ___ money.", r: "any", t: "n",
+      pq: "frase com don't: any."},
+ s6: {f: "There aren't ___ oranges on the table.", r: "any", t: "n",
+      pq: "aren't é negativa: any."},
+ s7: {f: "There is ___ money in my wallet.", r: "some", t: "a",
+      pq: "frase que diz que TEM: some."},
+ s8: {f: "We don't have ___ bananas.", r: "any", t: "n",
+      pq: "frase com don't: any."},
+ s9: {f: "Can I have ___ water, please?", r: "some", t: "e",
+      pq: "é um PEDIDO, não uma dúvida — pedido leva some."},
+ s10: {f: "Would you like ___ sugar in your tea?", r: "some", t: "e",
+       pq: "é uma OFERTA — oferecer leva some."},
+ s11: {f: "Do you have ___ brothers or sisters?", r: "any", t: "p",
+       pq: "pergunta de quem não sabe: any."},
+ s12: {f: "I have ___ news for you.", r: "some", t: "a",
+       pq: "frase que diz que TEM: some."}
+};
+
+/* ---------- 6 · WHAT'S IN THE SUITCASE? (da d01, VERBATIM: *"Fill the gaps
+   with a/ an/ some/ any."*; e da d10, *"Fill the gaps with some - any - a -
+   an"*) ----------
+   ⭐ A FOLHA ILUSTRADA DO BLOCO: aqui a criança VÊ a coisa antes de decidir, e
+      é a figura que explica por que `an old clock` leva `an` e `money` não leva
+      artigo nenhum.
+   ⚠️ AS FIGURAS SAEM DA FOLHA DE PAPEL, recortadas da d24 — regra do Marcos de
+      14/set/2026: *"procure na internet, nada de imagem gerada por IA, utilize
+      das atividades"*. Qual veio de onde está em `img/ORIGEM.json`. */
+var MALA = {
+ v1: {a: "There is", b: "old suitcase at the desk.", r: "an",
+      f: "lf_suitcase.png", alt: "uma mala de viagem com etiquetas"},
+ v2: {a: "There is", b: "mouse inside this bag!", r: "a",
+      f: "lf_mouse.png", alt: "um rato cinzento"},
+ v3: {a: "There is", b: "money in the wallet.", r: "some",
+      f: "lf_money.png", alt: "notas de dinheiro"},
+ v4: {a: "Is there", b: "music on this phone?", r: "any",
+      f: "lf_music.png", alt: "notas musicais numa pauta"},
+ v5: {a: "There aren't", b: "matches in the box.", r: "any",
+      f: "lf_match.png", alt: "um fósforo aceso"},
+ v6: {a: "There is", b: "tea in the cup.", r: "some",
+      f: "lf_tea.png", alt: "uma xícara de chá"}
+};
+
+/* ---------- 7 · MUCH or MANY? (da d07, VERBATIM: *"B. Fill the blank spaces
+   with much or many."*) ----------
+   ⭐ Fecha o bloco do quantificador pela PERGUNTA, que é onde `much` e `many`
+      realmente moram: ninguém diz *"I have many friends"* tanto quanto pergunta
+      *"How many friends do you have?"*.
+   ⚠️ A folha de papel tem dezoito frases e catorze delas são `many` — copiar a
+      lista inteira ensinaria a criança a chutar `many`. Escolhi oito, quatro e
+      quatro. */
+var MUCHMANY = {
+ n1: {f: "How ___ oranges did you buy?", r: "many"},
+ n2: {f: "How ___ sugar do you need?", r: "much"},
+ n3: {f: "How ___ children do they have?", r: "many"},
+ n4: {f: "How ___ cheese have you got?", r: "much"},
+ n5: {f: "How ___ chairs are there in the room?", r: "many"},
+ n6: {f: "How ___ water do you drink a day?", r: "much"},
+ n7: {f: "How ___ days does a leap year have?", r: "many"},
+ n8: {f: "How ___ flour do we need for the pie?", r: "much"}
+};
+
+/* ---------- 8 · CORRECT THE MISTAKES (da d02, VERBATIM: *"3. Correct the
+   mistakes:"*) ----------
+   ⭐ JULGAR é um degrau acima de escolher: a criança não recebe duas opções —
+      ela olha a frase inteira e decide se está de pé.
+   ⚠️ NA FOLHA DE PAPEL AS DEZESSETE FRASES ESTÃO TODAS ERRADAS, e isso não
+      serve para julgar: quem percebesse o padrão responderia "errada" sempre e
+      acertaria tudo sem ler. Metade daqui está CERTA — e as certas são as
+      próprias frases dela, consertadas. */
+var JULGA = {
+ j1: {f: "These carrot are sweet.", r: "n", pq: "são várias: <b>carrots</b>."},
+ j2: {f: "There is some water in the bottle.", r: "s", pq: "water não se conta, e a frase diz que TEM: some water."},
+ j3: {f: "There is much waters in this jar.", r: "n", pq: "water nunca vira <b>waters</b>: é much water."},
+ j4: {f: "How many suitcases have you got?", r: "s", pq: "suitcase se conta, então how many — e no plural."},
+ j5: {f: "How many sandwich have you bought?", r: "n", pq: "depois de how many vem o plural: <b>sandwiches</b>."},
+ j6: {f: "I don't like tea at all.", r: "s", pq: "tea não se conta: nada de teas."},
+ j7: {f: "Don't put more salts in this dish.", r: "n", pq: "salt não se conta: <b>salt</b>, sem s."},
+ j8: {f: "There are four chairs round the table.", r: "s", pq: "quatro cadeiras: chairs, no plural."}
+};
+
+/* ---------- 9 · AT THE LOST & FOUND DESK (o diálogo) ----------
+   ⭐ GESTO DO PAPEL, CONVERSA MINHA — e está declarado. O gesto vem da d08
+      (*"Ex.2. Read the dialogue and fill in the gaps."*) e da d26 (*"Look at
+      the menu and complete the conversation with a question from the box"*): as
+      duas põem o quantificador dentro de uma CONVERSA, que é o que o currículo
+      chama de *"práticas contextualizadas"*. O diálogo delas é sobre uma festa
+      de aniversário; este é no balcão, porque é o mundo deste caderno.
+   ⭐ E É A ÚNICA FOLHA EM QUE TUDO APARECE JUNTO: some, any, much e many numa
+      conversa só, que é como eles aparecem na vida. */
+var DIALOGO = {
+ k: "desk",
+ titulo: "Anna perdeu a bolsa no aeroporto e foi ao balcão de achados e perdidos.",
+ linhas: [
+  {q: "Clerk", t: "Good morning. Can I help you?"},
+  {q: "Anna", t: "Yes, please. Is there ___ black bag here?", g: "d1"},
+  {q: "Clerk", t: "We have ___ black bags. What is inside yours?", g: "d2"},
+  {q: "Anna", t: "There is ___ money and there are ___ keys.", g: "d3", g2: "d4"},
+  {q: "Clerk", t: "How ___ money?", g: "d5"},
+  {q: "Anna", t: "About fifty reais. And how ___ keys are in this one?", g: "d6"},
+  {q: "Clerk", t: "I am sorry. There aren't ___ keys in this bag.", g: "d7"}
+ ],
+ lac: {
+  d1: {r: "any", pq: "pergunta de quem não sabe: any."},
+  d2: {r: "some", pq: "o moço diz que TEM: some."},
+  d3: {r: "some", pq: "ela diz que TEM, e money não se conta: some."},
+  d4: {r: "some", pq: "ela diz que TEM, e keys se contam: some."},
+  d5: {r: "much", pq: "money não se conta: how much."},
+  d6: {r: "many", pq: "keys se contam: how many."},
+  d7: {r: "any", pq: "aren't é negativa: any."}
+ }
+};
+
+/* ---------- 10 · MAKE A QUESTION (da d11, VERBATIM: *"Make a Question. For
+   Example: How much juice is there? There is some juice."*) ----------
+   ⭐ É O DEGRAU MAIS ALTO DO BLOCO DOS QUANTIFICADORES: até aqui a criança
+      escolhia uma palavra dentro de uma frase pronta; agora ela MONTA a
+      pergunta inteira, e a ordem das palavras é a metade difícil do inglês.
+   ⚠️ A RESPOSTA DECLARADA É A FILA DE PEDAÇOS NA ORDEM, nunca a frase pronta —
+      lição paga na Loteria do S: com a frase pronta ninguém, nem o jogador da
+      banca nem o relatório, sabia em que ordem tocar. */
+var PERGUNTA = {
+ w1: {resp: "There is some money in the bag.",
+      pedacos: ["How", "much", "money", "is there?"]},
+ w2: {resp: "There are some keys in the box.",
+      pedacos: ["How", "many", "keys", "are there?"]},
+ w3: {resp: "There is some water in the bottle.",
+      pedacos: ["How", "much", "water", "is there?"]},
+ w4: {resp: "There are some books in the suitcase.",
+      pedacos: ["How", "many", "books", "are there?"]}
+};
+
+/* ---------- 11 · YES, THERE IS (da d01, VERBATIM: *"6. Is there any chicken?
+   Yes, ______. · 7. Are there any oranges? No, ______."*) ----------
+   ⭐ A resposta curta é o que a criança vai USAR falando, e é a única folha do
+      caderno em que o singular e o plural mudam o VERBO, não o substantivo. */
+var RESPCURTA = {
+ r1: {p: "How many suitcases are there?", s: "There are three."},
+ r2: {p: "How much money is there?", s: "There is fifty reais."},
+ r3: {p: "Is there any milk in the bottle?", s: "No, there isn't."},
+ r4: {p: "Are there any keys in the bag?", s: "Yes, there are two."},
+ r5: {p: "Is there a camera in the suitcase?", s: "Yes, there is one."},
+ r6: {p: "Are there any tickets on the desk?", s: "No, there aren't."}
+};
+
+/* ---------- 12 · ACHE O PRONOME (da b18, VERBATIM: *"1. Identify the Relative
+   Pronoun (Underline the relative pronoun in each sentence)"*) ----------
+   ⭐ ABRE O BLOCO DOS PRONOMES RELATIVOS PELO OLHO, não pela regra: antes de
+      escolher qual pronome entra, a criança precisa VER onde ele mora. Todas as
+      frases já estão prontas e certas; o que ela faz é apontar. */
+var ACHA = {
+ a1: {palavras: ["The", "woman", "who", "is", "talking", "is", "my", "aunt."], alvo: "who"},
+ a2: {palavras: ["This", "is", "the", "book", "that", "I", "borrowed", "from", "you."], alvo: "that"},
+ a3: {palavras: ["The", "man", "whose", "car", "broke", "down", "is", "my", "neighbor."], alvo: "whose"},
+ a4: {palavras: ["That", "is", "the", "house", "which", "we", "visited", "last", "year."], alvo: "which"},
+ a5: {palavras: ["The", "teacher", "whose", "class", "is", "very", "popular", "is", "strict."], alvo: "whose"},
+ a6: {palavras: ["The", "car", "that", "she", "bought", "is", "expensive."], alvo: "that"}
+};
+
+/* ---------- 13 · WHO or WHICH? (da b20, VERBATIM: *"Complete the sentences
+   using 'who, which or where'"*, e o cartaz dela: *"We use WHO to talk about a
+   person · We use WHICH to talk about an object, or an animal"*) ----------
+   ⚠️ TIREI O `where` DAS OPÇÕES, e o motivo é o currículo: o 8º ano de Blumenau
+      nomeia QUATRO pronomes (who, which, that, whose) e `where` não está entre
+      eles. Deixá-lo na fileira faria a criança errar por uma coisa que o ano
+      dela não ensina — e as frases de lugar da folha ficaram de fora. */
+var WHOWHICH = {
+ p1: {f: "The boy ___ drives that car is very rich.", r: "who"},
+ p2: {f: "Tigers are animals ___ live in India.", r: "which"},
+ p3: {f: "The girl ___ has a red hat is in my class.", r: "who"},
+ p4: {f: "A pen is an object ___ I use to write with.", r: "which"},
+ p5: {f: "Children ___ don't study don't pass the exams.", r: "who"},
+ p6: {f: "The test ___ we are doing is very difficult.", r: "which"}
+};
+
+/* ---------- 14 · WHO · WHICH · WHOSE (da b04, VERBATIM: *"FILL IN THE BLANKS
+   WITH THE CORRECT RELATIVE PRONOUN"*; e da b03) ----------
+   ⚠️⚠️ AS TRÊS OPÇÕES SÃO `who`, `which` e `whose` — o `that` NÃO ESTÁ AQUI, e
+      isso é uma decisão medida, não um esquecimento. Em toda frase de *"escolha
+      o pronome"* das 54 folhas colhidas, onde cabe `who` também cabe `that`, e
+      onde cabe `which` também cabe `that`: pôr os quatro na fileira seria
+      reprovar a criança por ter escolhido uma resposta CERTA.
+      O `that` tem lugar próprio neste caderno — a folha 12, onde ela o acha
+      dentro da frase, e a folha 17, onde ela julga *"This is the bank THAT was
+      robbed yesterday"*, que é o único caso em que ele é indiscutível. */
+var TRES = {
+ t1: {f: "The man ___ works in the store is my uncle.", r: "who"},
+ t2: {f: "I met a woman ___ brother is a famous artist.", r: "whose"},
+ t3: {f: "I saw a movie ___ was very exciting.", r: "which"},
+ t4: {f: "He is the student ___ father is the principal.", r: "whose"},
+ t5: {f: "The person ___ called you is waiting outside.", r: "who"},
+ t6: {f: "The book ___ you lent me is on the table.", r: "which"}
+};
+
+/* ---------- 15 · WHOSE (da b24, VERBATIM: *"Complete the sentences with who,
+   which, whose and whom"*) ----------
+   ⭐ E AQUI HÁ UMA REGRA QUE SE VÊ, não que se decora: depois de `whose` vem
+      sempre um SUBSTANTIVO (car, father, hair); depois de `who` vem sempre um
+      VERBO (has, shouted, comes). A criança olha a palavra seguinte e decide.
+      É a dica desta folha, e ela é verdadeira. */
+var POSSE = {
+ o1: {f: "I talked to the girl ___ car had broken down.", r: "whose"},
+ o2: {f: "That's Peter, the boy ___ has just arrived at the airport.", r: "who"},
+ o3: {f: "The man, ___ father is a professor, forgot his umbrella.", r: "whose"},
+ o4: {f: "The children ___ shouted in the street are not from our school.", r: "who"},
+ o5: {f: "Look at the girl ___ hair is black and shiny.", r: "whose"},
+ o6: {f: "This is the girl ___ comes from Spain.", r: "who"}
+};
+
+/* ---------- 16 · WHAT IS IT? (da b22, VERBATIM: *"RELATIVE CLAUSES : Relative
+   Pronouns — Fill in the blanks with 'who, which, whose, whom'"*, vinte e
+   quatro quadrinhos de definição) ----------
+   ⭐ A FRASE-DEFINIÇÃO É O USO MAIS NATURAL DO PRONOME RELATIVO: toda vez que
+      alguém explica o que uma coisa é, ele aparece. É por isso que esta folha
+      fecha o bloco pelo SENTIDO, e não por mais uma escolha.
+   ⚠️ AS FIGURAS DELA NÃO SE RECORTAM: a folha veio com 500×707 e uma marca
+      d'água atravessada no meio — mostrar aquilo ampliado reprovaria na regra
+      de resolução do `_qa/leiaute_mao.js` (1,35×). O que entra é o TEXTO. */
+var DEFINE = {
+ e1: {p: "a butcher", s: "a person who sells meat in a shop"},
+ e2: {p: "a skyscraper", s: "a tall building which you can see in big cities"},
+ e3: {p: "an oven", s: "a machine which is used for cooking food"},
+ e4: {p: "a giraffe", s: "a tall animal which has got a very long neck"},
+ e5: {p: "a fireman", s: "a man who extinguishes fires in buildings"},
+ e6: {p: "a florist", s: "a person who grows and sells flowers in a shop"}
+};
+
+/* ---------- 17 · CERTA OU ERRADA? (da b05, VERBATIM: *"2) Read the sentences
+   below and put (C) CORRECT or (W) WRONG. Correct the worng one."*) ----------
+   ⭐ É A FOLHA MAIS BEM ESCOLHIDA DAS 54, e o mérito é da professora que a fez:
+      os erros que ela põe são exatamente os que o aluno comete — *"A boy WHO
+      sister is in my class"* e *"a book WHICH pages are dirty"*, os dois com
+      `whose` trocado. Julgar o erro do outro é ver o próprio erro de fora.
+   ⭐ E É AQUI QUE O `that` É MEDIDO: *"This is the bank THAT was robbed
+      yesterday"* está CERTA, e é o único lugar do caderno em que isso não
+      admite discussão (ver o comentário da folha 14). */
+var JULGAP = {
+ u1: {f: "This is the bank <b>that</b> was robbed yesterday.", r: "s",
+      pq: "that serve para coisa e para gente: aqui está certo."},
+ u2: {f: "A boy <b>who</b> sister is in my class was in the bank.", r: "n",
+      pq: "a irmã é DO menino: era <b>whose</b>."},
+ u3: {f: "The book <b>which</b> I gave you had many pictures.", r: "s",
+      pq: "o livro é coisa: which está certo."},
+ /* ⚠️ A b05 traz aqui *"The player WHO scored that goal was Pelé."* — a única
+    frase brasileira das 54 folhas, e eu a queria. Ela saiu por uma razão
+    medida: o portão `_qa/falas.py` reprova fala marcada `lang:"en"` que tenha
+    acento português, e reprova com razão (foi assim que uma fala portuguesa
+    saiu com voz americana e o Marcos ouviu: *"fala rato em inglês"*). O `é` de
+    Pelé dispara a regra, e a saída seria ou escrever *Pele* na tela — errando o
+    nome dele — ou afrouxar o portão por causa de uma frase. Troquei pela outra
+    frase CERTA da mesma folha (b05, item 4g), que também é cultural. */
+ u4: {f: "Charlie Chaplin, <b>who</b> died in 1977, was a famous star of the cinema.", r: "s",
+      pq: "Chaplin é gente: who está certo."},
+ u5: {f: "This is a book <b>which</b> pages are dirty.", r: "n",
+      pq: "as páginas são DO livro: era <b>whose</b>."},
+ u6: {f: "The woman <b>who</b> gave him the money was young.", r: "s",
+      pq: "a mulher é gente: who está certo."}
+};
+
+/* ---------- 18 · JOIN THE TWO SENTENCES (da b12, VERBATIM: *"B. Join the pairs
+   of sentences using relative pronouns."*; da b06, *"C. Join the two sentences
+   into one."*; e a b17 desenha a regra: *"We can use relative pronouns to
+   connect two phrases"*) ----------
+   ⭐⭐ É O CORAÇÃO DO CADERNO. *"Juntar duas frases numa só"* é, palavra por
+      palavra, o que o currículo de Blumenau chama de **"construir períodos
+      compostos por subordinação"**. Escolher entre quatro pronomes é
+      RECONHECER; juntar duas frases é CONSTRUIR — e só esta folha mede isso.
+   ⭐ O ÚLTIMO ITEM PÕE A ORAÇÃO NO MEIO (*"The dog whose owner is Ms Nora chased
+      me"*), que é o degrau: até ali ela sempre entrava no fim.
+   ⚠️ O QUE SE MEDE AQUI É A ORDEM — o pronome já vem escrito na peça. Quem mede
+      a ESCOLHA do pronome é a folha 19, no teclado. */
+var JUNTA = {
+ z1: {a: "She worked for a man.", b: "The man used to be an athlete.",
+      pedacos: ["She worked for a man", "who", "used to be", "an athlete."]},
+ z2: {a: "We've broken the computer.", b: "The computer belonged to my father.",
+      pedacos: ["We've broken the computer", "which", "belonged to", "my father."]},
+ z3: {a: "They called a lawyer.", b: "The lawyer lived nearby.",
+      pedacos: ["They called a lawyer", "who", "lived", "nearby."]},
+ z4: {a: "The kangaroo is an animal.", b: "It lives in Australia.",
+      pedacos: ["The kangaroo is an animal", "which", "lives", "in Australia."]},
+ z5: {a: "Leonardo Da Vinci was an artist.", b: "He painted the Mona Lisa.",
+      pedacos: ["Leonardo Da Vinci was an artist", "who", "painted", "the Mona Lisa."]},
+ z6: {a: "The dog chased me.", b: "His owner is Ms Nora.",
+      pedacos: ["The dog", "whose owner is Ms Nora", "chased me."]}
+};
+
+/* ---------- 19 · ESCREVA O PRONOME (da b03, VERBATIM: *"Complete the sentences
+   with relative pronouns from the box."*; e da b07) ----------
+   ⚠️⚠️ AS SEIS FRASES TÊM VÍRGULA, E ISSO NÃO É ESTILO: é o que torna o
+      gabarito ÚNICO. Depois de vírgula o inglês não aceita `that` — então, das
+      quatro palavras do currículo, só uma cabe em cada lacuna, e a criança não
+      pode ser reprovada por ter escrito uma resposta que também estaria certa.
+      A regra vira a dica da folha, e ela é verdadeira.
+   ⚠️ O teclado da casa não tem barra de espaço: por isso todo gabarito aqui é
+      UMA palavra só. E não há acento em inglês, então o alfabeto basta. */
+var ESCREVE = {
+ x1: {a: "My dad,", b: "travels a lot on business, is in Australia.", r: "WHO"},
+ x2: {a: "He is the young man,", b: "wife left him for someone else.", r: "WHOSE"},
+ x3: {a: "We stayed at the Rockstar hotel,", b: "also had a swimming pool.", r: "WHICH"},
+ x4: {a: "I have to buy a present for my mother,", b: "birthday is next week.", r: "WHOSE"},
+ x5: {a: "Columbus,", b: "was born in Italy, sailed to America in 1492.", r: "WHO"},
+ x6: {a: "Queen Victoria,", b: "husband was Albert, became Empress of India.", r: "WHOSE"}
+};
+
+/* ---------- 20 · THE MAN WHO WROTE HAMLET ----------
+   ⭐ O TEXTO É MEU, FEITO DAS FRASES DA b07 e da b16 — e está declarado. A b07 é
+      a única das 54 folhas que traz conteúdo cultural de verdade (Shakespeare,
+      o Globe Theatre, Stonehenge, Loch Ness), e o currículo de Blumenau tem um
+      EIXO INTEIRO pedindo isso: *"Construir repertório cultural por meio do
+      contato com manifestações artístico-culturais vinculadas à Língua
+      Inglesa"*. Frase de gramática que também ensina quem foi Shakespeare vale
+      por duas.
+   ⚠️ E AS PERGUNTAS NÃO SÃO SÓ DE COMPREENSÃO: duas delas perguntam POR QUE o
+      pronome é aquele. É o conceito vindo por último, que é a lei da casa. */
+var TEXTO = {
+ k: "hamlet",
+ titulo: "The man who wrote Hamlet",
+ corpo: "William Shakespeare is the man <b>who</b> wrote Hamlet. He was an " +
+        "English poet <b>whose</b> birthplace was Stratford-upon-Avon. The " +
+        "Globe Theatre, <b>which</b> was built in London, is the theatre " +
+        "<b>that</b> showed his plays. Today there is a replica <b>which</b> " +
+        "visitors can see. Shakespeare, <b>who</b> died in 1616, wrote 37 " +
+        "plays. There isn't <b>any</b> other English writer <b>who</b> is " +
+        "more famous.",
+ perg: [
+  {q: "Who wrote Hamlet?",
+   o: ["The Globe Theatre", "William Shakespeare", "Stratford-upon-Avon"], r: 1},
+  {q: "Por que é <b>whose</b> em <i>an English poet whose birthplace was Stratford</i>?",
+   o: ["porque a cidade é o lugar onde ele nasceu — é DELE",
+       "porque poeta é uma pessoa",
+       "porque a frase é negativa"], r: 0,
+   pq: "whose diz de quem é a coisa que vem logo depois dele."},
+  {q: "Por que é <b>which</b> em <i>The Globe Theatre, which was built in London</i>?",
+   o: ["porque teatro é gente", "porque teatro é coisa", "porque tem vírgula"], r: 1,
+   pq: "which é para coisa e para bicho; who é para gente."},
+  {q: "How many plays did Shakespeare write?",
+   o: ["16", "37", "1616"], r: 1},
+  {q: "Por que é <b>any</b> em <i>There isn't any other English writer</i>?",
+   o: ["porque a frase é negativa", "porque escritor se conta", "porque é um pedido"], r: 0,
+   pq: "isn't é negativa, e negativa leva any."}
+ ]
+};
+
+/* ---------- 21 · MARK EVERY UNCOUNTABLE (o gesto da d13, VERBATIM: *"2 Circle
+   the correct 'Quantifier'"*, e da d21, *"Classify the following words in
+   countable (C) or uncountable(U)"*) ----------
+   ⭐ REVISÃO ESPAÇADA (Roediger, Bjork): o bloco do contável × incontável ficou
+      dezesseis folhas atrás, e é justamente por isso que ele volta aqui — o
+      Aquecimento no fim não é enchimento, é o que fixa.
+   ⚠️ E AQUI A CRIANÇA MARCA VÁRIAS E SÓ DEPOIS CONFERE: ela pode mudar de ideia
+      antes de entregar, que é uma decisão diferente de responder uma por uma. */
+var MARCAR = {
+ y1: {n: "money", inc: 1},   y2: {n: "key", inc: 0},
+ y3: {n: "water", inc: 1},   y4: {n: "book", inc: 0},
+ y5: {n: "music", inc: 1},   y6: {n: "suitcase", inc: 0},
+ y7: {n: "rice", inc: 1},    y8: {n: "camera", inc: 0},
+ y9: {n: "time", inc: 1},    y10: {n: "ticket", inc: 0},
+ y11: {n: "milk", inc: 1},   y12: {n: "dress", inc: 0}
+};
+
+/* ---------- 22 · O CARTAZ QUE EU LEVO (o fecho com gancho) ----------
+   ⚠️ O FECHO DAS FOLHAS DE ORIGEM é *"Make your own sentences"* (b18) e *"Write
+      one sentence using a relative pronoun"* (b10) — produção livre, que a tela
+      não corrige. O que a tela sabe fazer é a criança MONTAR o cartaz dela.
+   ⭐ E É O "QUERO MAIS": ela sai daqui com um lembrete que é DELA, para colar no
+      caderno de papel — e é ali, no papel, que a escrita de frases que a tela
+      não mede vai acontecer. O dossiê diz isso ao professor.
+   ⚠️ AQUI NÃO HÁ RESPOSTA CERTA NEM ERRADA: toda peça é alvo. */
+var CARTAZ = {
+ z11: {t: "SOME → a frase diz que TEM", ex: "There is some money in the bag."},
+ z12: {t: "ANY → negativa e pergunta", ex: "There isn't any money in the bag."},
+ z13: {t: "MUCH → o que não se conta", ex: "How much money is there?"},
+ z14: {t: "MANY → o que se conta", ex: "How many keys are there?"},
+ z15: {t: "WHO → gente", ex: "The girl who lost the bag."},
+ z16: {t: "WHICH → coisa e bicho", ex: "The bag which was lost."},
+ z17: {t: "THAT → serve para os dois", ex: "The bag that was lost."},
+ z18: {t: "WHOSE → de quem é", ex: "The girl whose bag was lost."}
+};
+/*DADOS-FIM*/
+
+/* ⚠️ A MARCA DE VERSÃO NA FIGURA. Quando eu troco uma figura, o NOME do arquivo
+   continua o mesmo — e o navegador da escola serve a cópia velha do cache.
+   REGRA: mexeu em figura, sobe o VIMG no mesmo commit. */
+var VIMG = 2;
+/* ⚠️⚠️ `draggable="false"` NÃO É DETALHE: toda imagem é arrastável de fábrica no
+   navegador, e quando a criança apertava a figura e puxava, o Chrome começava o
+   SEU arrasto nativo e disparava um `pointercancel` — o nosso arrasto morria no
+   primeiro milímetro, sem erro nenhum na tela. */
+/* ⚠️ AQUI O NOME DO ARQUIVO VEM INTEIRO, e não por prefixo. No caderno de onde
+   este motor foi clonado o `img()` colava `img/ls_` na frente e `.png` atrás, e
+   é exatamente esse tipo de peça que o `_qa/clone.py` (item 8, PREFIXO ALHEIO)
+   pega: o prefixo de outra pasta vazando para dentro desta. Aqui os DADOS já
+   declaram `sb_pato.png` por extenso, que é uma coisa a menos para desencontrar. */
+function img(f, cls, alt){
+  return '<img class="' + (cls || "fig") + '" draggable="false" src="img/' + f +
+         '?v=' + VIMG + '" alt="' + (alt || "") + '">';
+}
+
+/* ---------- estado ---------- */
+var ST = {pag: 0, nome: "", folha: null, resp: {}, lig: {}, tent: {}, prontas: {}, inicio: 0};
+var vozLigada = true, _narr = null, vozPtBR = null, ATIVA = null;
+var CHAVE_LS = "lost_found_o_balcao_dos_achados_e_perdidos";
+/* ⚠️ AS 25 FOLHAS, NA ORDEM — e a ordem É a escada.
+   o mesmo ser com dois nomes (1-5) → a maiúscula e os nomes que são MEUS (6-9)
+   → uma palavra ou duas coladas (10-15) → de onde veio esta palavra (16-22) →
+   um nome para muitos (23) → o substantivo dentro de um TEXTO (24) → o cartaz
+   que a criança leva (25).
+   ⚠️ E VEM EM BLOCO, não espalhado (regra do Marcos: *"as crianças me dizem
+      'isso eu já fiz'"*): a gaveta em 2, 4 e 5 e depois na 10; o marca-texto em
+      7 e 13; o ligar em 15, 18 e 23 — colados dentro do bloco, subindo um
+      degrau, e nunca a mesma tela duas vezes seguidas com o mesmo degrau. */
+/* ⚠️ OS NOMES DAS FOLHAS, NA ORDEM — e a ordem É a escada didática.
+   ⚠️ E A REPETIÇÃO VEM EM BLOCO, não espalhada (regra do Marcos: *"as crianças
+      me dizem 'isso eu já fiz'"*): mecânica que repete vem em folhas COLADAS,
+      subindo um degrau; o que sobe é o apoio que some, não a tela.
+   ⚠️ O andarilho confere a promessa da capa contra este número: dizer "vinte e
+      cinco folhas" num caderno de vinte e duas reprova. */
+var NOMES = [
+ "A or SOME?",
+ "Countable or uncountable?",
+ "Uma, várias, ou nem se conta",
+ "Circle and underline",
+ "SOME or ANY?",
+ "What is in the suitcase?",
+ "MUCH or MANY?",
+ "Correct the mistakes",
+ "At the Lost & Found desk",
+ "Make a question",
+ "Yes, there is.",
+ "Ache o pronome na frase",
+ "WHO or WHICH?",
+ "WHO · WHICH · WHOSE",
+ "WHOSE — de quem é isto?",
+ "What is it?",
+ "Certa ou errada?",
+ "Join the two sentences",
+ "Escreva o pronome que falta",
+ "The man who wrote Hamlet",
+ "Mark every uncountable",
+ "O cartaz que eu levo"
+];
+/*<dossie-dados>*/
+/* ⚠️ ESTE OBJETO E O `curriculo.json` SÃO A MESMA COISA, e o portão 0b9
+   (`_qa/pedagogo_curriculo.py`) reprova se divergirem. Cada habilidade tem de
+   existir PALAVRA POR PALAVRA no `_curriculo/blumenau.txt` — é a única coisa
+   que o professor não tem como conferir sozinho sem abrir 440 páginas de PDF.
+   ⚠️ E se o conteúdo for de OUTRO ANO, diga qual, aqui dentro. Foi a lição da
+   Coroa dos Cinco Reinos: dá para citar com honestidade total e mesmo assim
+   ensinar coisa que não é do ano.
+   ⚠️ O que não estiver no currículo da rede vai em `fora_do_curriculo`, com o
+   motivo — ele é IMPRESSO no dossiê em toda rodada. */
+var CURRICULO = {
+ "ano": 8,
+ "componente": "Língua Inglesa",
+ "rede": "Currículo da Educação Básica do Sistema Municipal de Ensino de Blumenau",
+ "documento": "_curriculo/blumenau.txt",
+ "conceitos": [
+  "quantificadores some, any, many e much",
+  "pronomes relativos who, which, that e whose",
+  "períodos compostos por subordinação",
+  "substantivos contáveis e incontáveis"
+ ],
+ "fora_do_curriculo": [
+  {
+   "conceito": "substantivos contáveis e incontáveis (countable / uncountable)",
+   "onde": "folhas 1, 2, 3, 4 e 21",
+   "motivo": "O Quadro Organizador do 8º ano de Blumenau nomeia, em Gramática, os QUANTIFICADORES (some, any, many e much) — não nomeia, com essas palavras, o par contável/incontável. Ele entra assim mesmo, e por um motivo medido: das 54 folhas de papel colhidas na internet para este caderno, TODAS as trinta do primeiro lote tratam o quantificador junto com o par contável/incontável, porque é ele que decide entre much e many e entre a e some. Sem esse degrau, a criança escolhe por sorteio. São 5 folhas de 22, e elas são a ENTRADA do caderno, não o conteúdo dele."
+  },
+  {
+   "conceito": "a few, a little, a lot of, no, none e os partitivos (a bar of, a piece of)",
+   "onde": "em lugar nenhum — ficaram DE FORA de propósito",
+   "motivo": "Aparecem em quase todas as folhas colhidas (d03, d07, d09, d13, d20, d22, d27) e NÃO estão na citação do 8º ano, que nomeia quatro quantificadores. Estão registrados aqui para que o professor saiba que a escolha foi deliberada: o caderno mede os quatro do currículo e não cobra os outros."
+  },
+  {
+   "conceito": "where, when, whom e why como pronomes relativos",
+   "onde": "em lugar nenhum — ficaram DE FORA de propósito",
+   "motivo": "Onze das 24 folhas de pronomes relativos colhidas trazem where e when na mesma fileira de opções, e três trazem whom. O currículo do 8º ano nomeia QUATRO (who, which, that, whose). Deixá-los na fileira faria a criança errar por um conteúdo que o ano dela não ensina. As frases de lugar e de tempo das folhas de papel ficaram fora do caderno."
+  }
+ ],
+ "degrau": 1,
+ "evidencia": [
+  "Jogado do começo ao fim no navegador, item por item, antes de publicar.",
+  "Um jogador automático resolve cada item pela resposta declarada e confere se a folha fecha.",
+  "Leiaute medido em 6 tamanhos de tela: nenhuma figura cortada e nenhum alvo de toque menor que 40 px.",
+  "Toda tela é narrada com voz real — e as falas em inglês são gravadas com voz INGLESA, não com voz portuguesa lendo inglês.",
+  "Contraste do texto medido no pixel real do fundo, não na folha de estilo.",
+  "As figuras foram recortadas das próprias folhas de papel usadas em sala — a turma reencontra na tela o desenho da atividade impressa. Nenhuma foi gerada por IA.",
+  "Os comandos das 22 folhas foram copiados, palavra por palavra, das 54 folhas de papel colhidas; o crivo de todas está em _sequencias/POTE-ING8.md.",
+  "As habilidades citadas neste dossiê são conferidas, palavra por palavra, contra o currículo da rede."
+ ],
+ "observacoes": [
+  "⚠️ LEIA ESTA PRIMEIRO — POR QUE AS CITAÇÕES TÊM UM HÍFEN NO MEIO DA PALAVRA. O currículo de Blumenau é um PDF de 440 páginas diagramado em colunas estreitas, e a extração para texto guardou a hifenização de fim de linha: onde se lê 'contextualizadas' na página impressa, o arquivo traz 'com-textualizadas', e onde se lê 'compostos', traz 'com-postos'. As citações abaixo estão copiadas EXATAMENTE como o arquivo as traz, com o hífen — porque a regra desta casa é que a citação exista palavra por palavra no documento, e inventar a palavra inteira seria consertar o currículo por conta própria. O professor lê 'contextualizadas' e 'compostos'.",
+  "O CONTEÚDO É O DO 8º ANO, E ELE VEM DO EIXO CONHECIMENTOS LINGUÍSTICOS. Os dois objetos de conhecimento estão na unidade temática GRAMÁTICA do Quadro Organizador dos Conceitos do 8º ano (LÍNGUAS ADICIONAIS), e os dois são de Língua Inglesa, não de Língua Alemã: o quadro traz as duas línguas lado a lado, e a linha alemã (einige, viel, sehr, wenig) ficou fora deste caderno.",
+  "O PORTÃO DE CONCEITOS DIZ 'NÃO MEDI' NESTE CADERNO, e isso não é 'passou'. O _qa/pedagogo_curriculo.py só sabe recortar o bloco de um ano quando o PDF traz o cabeçalho no formato '<COMPONENTE> – ANOS FINAIS – 8º ANO'. Em Línguas Adicionais o PDF traz 'LÍNGUAS ADICIONAIS – 8º ANO', sem 'ANOS FINAIS', e o recorte não acontece. Medir no documento inteiro aprovaria conteúdo de qualquer ano, o que seria pior. Quem confere o ano aqui é o professor, com as citações acima — e elas são do quadro do 8º ano, conferidas à mão.",
+  "O QUE ESTE CADERNO NÃO MEDE: escrever a própria frase. Quatro das folhas de papel colhidas terminam com 'Make your own sentences' e 'Write one sentence using a relative pronoun' — produção escrita livre, que a tela não corrige. A folha 22 monta o cartaz que a criança leva, e é no caderno de papel, com o professor, que essa escrita acontece.",
+  "POR QUE O 'THAT' É MEDIDO NUMA FOLHA SÓ. Em toda frase de 'escolha o pronome' das 54 folhas colhidas, onde cabe 'who' também cabe 'that', e onde cabe 'which' também cabe 'that'. Pôr os quatro na mesma fileira de opções reprovaria a criança por uma resposta CERTA. Por isso o 'that' aparece na folha 12 (ela o acha dentro da frase pronta) e é medido na folha 17, em 'This is the bank that was robbed yesterday' — o único caso em que ele é indiscutível. E na folha 19, em que a criança digita, as seis frases têm vírgula: depois de vírgula o inglês não aceita 'that', e por isso o gabarito é único.",
+  "AS DUAS EXCEÇÕES DO 'SOME' ESTÃO ENSINADAS, NÃO ESCONDIDAS. 'Can I have some water?' e 'Would you like some sugar?' levam 'some' apesar de serem perguntas, porque são PEDIDO e OFERTA. Está no cartaz da folha d07 colhida ('some — It is also used in questions for offers and requests') e é o uso que o aluno mais precisa na vida. As duas entram na folha 5 com o porquê escrito."
+ ],
+ "objetivos": [
+  {
+   "objetivo": "Distinguir o que se conta do que não se conta",
+   "folhas": [1, 2, 3, 4, 21],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Quantificadores",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: utilizar os quantificadores (some, any, many e much) em práticas com-textualizadas.\""
+  },
+  {
+   "objetivo": "Usar some e any conforme a frase",
+   "folhas": [5, 6],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Quantificadores",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: utilizar os quantificadores (some, any, many e much) em práticas com-textualizadas.\""
+  },
+  {
+   "objetivo": "Perguntar quanto com much e many",
+   "folhas": [7, 8, 9, 10, 11],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Quantificadores",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: utilizar os quantificadores (some, any, many e much) em práticas com-textualizadas.\""
+  },
+  {
+   "objetivo": "Escolher o pronome relativo certo",
+   "folhas": [12, 13, 14, 15, 16, 17],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Pronomes relativos",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: construir períodos com-postos por subordinação para empregar os\""
+  },
+  {
+   "objetivo": "Juntar duas frases numa só com o pronome relativo",
+   "folhas": [18, 19, 20, 22],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Pronomes relativos",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: construir períodos com-postos por subordinação para empregar os\""
+  }
+ ]
+};
+/*</dossie-dados>*/
+
+/* ---------- som ---------- */
+var AC = null;
+function ac(){ try{ if(!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if(AC.state === "suspended") AC.resume(); }catch(e){} return AC; }
+function bip(f, dur, tipo, vol){
+  var a = ac(); if(!a) return;
+  try{
+    var o = a.createOscillator(), g = a.createGain();
+    o.type = tipo || "sine"; o.frequency.value = f;
+    g.gain.setValueAtTime(vol || .13, a.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, a.currentTime + dur);
+    o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime + dur);
+  }catch(e){}
+}
+function sPasso(){ bip(560, .07, "triangle", .08); }
+function sTecla(){ bip(760, .05, "square", .05); }
+function sCerto(){ bip(680, .1, "sine", .12); setTimeout(function(){ bip(920, .14, "sine", .12); }, 95); }
+function sErro(){ bip(190, .17, "sawtooth", .07); }
+function sFesta(){ [523, 659, 784, 1047].forEach(function(f, i){ setTimeout(function(){ bip(f, .16, "sine", .12); }, i * 110); }); }
+
+/* ---------- voz ---------- */
+function chaveVoz(t){
+  t = (t || "").replace(/\s+/g, " ").trim().toLowerCase();
+  var h = 5381, i;
+  for(i = 0; i < t.length; i++) h = ((h * 33) ^ t.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+function achaVoz(){
+  try{
+    var vs = window.speechSynthesis.getVoices();
+    for(var i = 0; i < vs.length; i++) if((vs[i].lang || "").toLowerCase().indexOf("pt-br") === 0) return vs[i];
+    for(i = 0; i < vs.length; i++) if((vs[i].lang || "").toLowerCase().indexOf("pt") === 0) return vs[i];
+  }catch(e){}
+  return null;
+}
+if(window.speechSynthesis) window.speechSynthesis.onvoiceschanged = function(){ vozPtBR = achaVoz(); };
+function calar(){
+  try{ if(_narr){ _narr.pause(); _narr.currentTime = 0; } }catch(e){}
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+  var b = document.getElementById("bOuvir"); if(b) b.className = "zap ouvir";
+}
+function falarNavegador(t){
+  if(!window.speechSynthesis) return;
+  try{
+    var u = new SpeechSynthesisUtterance(t);
+    u.lang = "pt-BR"; u.rate = .92; if(!vozPtBR) vozPtBR = achaVoz(); if(vozPtBR) u.voice = vozPtBR;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+var ultimaFala = null;
+/* ⚠️ O MP3 É O PADRÃO E O SINTETIZADOR É A RESERVA — nunca o contrário. Se a
+   criança ouvir voz de robô, o mp3 não chegou ao site: é defeito de entrega,
+   não "jeito alternativo". O portão de voz mede isso. */
+function falar(k){
+  var t = FALAS[k]; if(!t) return;
+  ultimaFala = k;
+  if(!vozLigada) return;
+  calar();
+  var b = document.getElementById("bOuvir"); if(b) b.className = "zap ouvir tocando";
+  function fim(){ var x = document.getElementById("bOuvir"); if(x) x.className = "zap ouvir"; }
+  var key = chaveVoz(t);
+  if(VOZOK[key]){
+    if(!_narr){ _narr = new Audio(); _narr.preload = "auto"; }
+    _narr.onended = fim; _narr.onerror = function(){ falarNavegador(t); setTimeout(fim, 2500); };
+    _narr.src = "audio/lf_" + key + ".mp3";
+    try{ _narr.currentTime = 0; }catch(e){}
+    var p = _narr.play(); if(p && p["catch"]) p["catch"](function(){ fim(); });
+    return;
+  }
+  falarNavegador(t); setTimeout(fim, Math.min(12000, 400 + t.length * 62));
+}
+function falarDepois(k, ms){ setTimeout(function(){ falar(k); }, ms || 0); }
+
+/* ---------- utilidades ---------- */
+function el(tag, cls, html){ var e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e; }
+function salvar(){ try{ ST.quando = Date.now(); localStorage.setItem(CHAVE_LS, JSON.stringify(ST)); }catch(e){} }
+/* ⭐ 55 MINUTOS = A AULA. Dentro dela quem volta é a MESMA criança; passada a
+   aula, quem senta ali é da outra turma e cairia no meio da viagem de um
+   colega — por isso o convite expira sozinho. */
+function carregar(){ try{
+  var s = localStorage.getItem(CHAVE_LS); if(!s) return null;
+  var o = JSON.parse(s);
+  if(!o || !o.quando || Date.now() - o.quando > 55 * 60 * 1000 || !o.folha) return null;
+  /* ⚠️ TRAVA 1 — O POTE GUARDADO AINDA EXISTE NESTE CADERNO?
+     Sem isto, quem jogou ANTES de uma republicação volta com uma folha que não
+     existe mais, o monta() estoura e a criança fica só com a faixa de cima — e
+     por 55 minutos, que é a aula inteira. Foi o que o Marcos pegou em
+     14/set/2026 ("só aparece a faixa de cima"; "anônima foi, a normal não"). */
+  for(var i = 1; i <= NOMES.length; i++){
+    if(!o.folha["p" + i]){ try{ localStorage.removeItem(CHAVE_LS); }catch(e2){} return null; }
+  }
+  return o;
+}catch(e){ return null; } }
+function tentativa(id, ok){ if(!ST.tent[id]) ST.tent[id] = {erros: 0, ok: false}; if(ok) ST.tent[id].ok = true; else ST.tent[id].erros++; salvar(); }
+function rnd(n){ return Math.floor(Math.random() * n); }
+function baralha(a){ var b = a.slice(), i, j, t; for(i = b.length - 1; i > 0; i--){ j = rnd(i + 1); t = b[i]; b[i] = b[j]; b[j] = t; } return b; }
+function pega(pool, qtd){ return baralha(pool).slice(0, Math.min(qtd, pool.length)); }
+function confete(n){
+  var c = document.getElementById("confete"), cores = ["#b0562a", "#f5b301", "#15a34a", "#1179bf", "#8b5cf6"], i;
+  for(i = 0; i < n; i++){
+    (function(i){
+      var d = el("div", "cf");
+      d.style.left = rnd(100) + "%"; d.style.top = "-20px";
+      d.style.background = cores[rnd(cores.length)];
+      d.style.animationDelay = (i * 26) + "ms";
+      c.appendChild(d); setTimeout(function(){ if(d.parentNode) c.removeChild(d); }, 1900 + i * 26);
+    })(i);
+  }
+}
+
+/* ---------- registro das respostas (o boletim e o relatório leem daqui) ---------- */
+var RESP = {};   /* id -> {certo, pag} */
+function registra(id, pag, certo){ RESP[id] = {certo: certo, pag: pag}; }
+function acertou(id, fala){
+  if(ST.resp[id]) return;
+  tentativa(id, true); ST.resp[id] = 1; salvar(); sCerto();
+  /* ⭐ a palavra escrita aparece AGORA, junto com o acerto — nunca antes.
+     Mostrá-la antes entrega a resposta (o defeito que o `_qa/resposta_impressa.py`
+     mede); escondê-la para sempre deixaria a criança sem saber se aquilo era
+     "oca" ou "cabana". Este é o instante certo. */
+  var segs = document.querySelectorAll('[data-nome="' + id + '"]'), sg;
+  for(sg = 0; sg < segs.length; sg++)
+    segs[sg].className = segs[sg].className.replace(/ ?revelado/, "") + " revelado";
+  if(fala) falar(fala);
+  setTimeout(function(){ confereFolha(RESP[id].pag); }, 850);
+}
+function errou(id, dica){
+  tentativa(id, false); sErro();
+  falar(ST.tent[id].erros >= 2 && dica ? dica : "quase");
+}
+
+/* ---------- o sorteio da folha do dia ----------
+   ⚠️ UMA LINHA POR FOLHA, `p1` até `pN`. Faltando uma, `ST.folha["pN"]` é
+   `undefined` e o caderno NÃO ABRE (TypeError na montagem).
+   ⚠️ O POTE PODE SER MAIOR QUE A FOLHA (`pega(ITENS.pN, 6)`): duas crianças
+   lado a lado não recebem a mesma lista, e quem refaz amanhã não recebe a de
+   hoje. Mas quando tirar uma peça desequilibra a resposta — uma gaveta de duas
+   colunas, um par que se vê — o pote vai INTEIRO, e o motivo fica escrito.
+   ⚠️ O EMBRULHO DAS FOLHAS DE LIGAR MORA NO `ITENS`, NÃO AQUI. Embrulhar de
+   novo dá três níveis e a folha não desenha.
+   Ex.:  p1: ITENS.p1.slice(0),
+         p2: pega(ITENS.p2, 6),          // sorteia 6 de um pote maior
+         p3: ITENS.p3.slice(0)           // já vem embrulhado: folha de ligar  */
+function novaFolha(){
+  return {
+    p1: pega(ITENS.p1, 6),
+    p2: pega(ITENS.p2, 8),
+    p3: ITENS.p3.slice(0),
+    /* DUAS POSICOES POR FRASE (`m1|c` e `m1|u`): a crianca faz DUAS decisoes em
+       cada uma. Com uma posicao por frase a folha se daria por pronta com
+       metade das palavras marcadas - quem conta os itens e o tamanho do pote. */
+    p4: (function(){
+      var fs = pega(["m1", "m2", "m3", "m4", "m5", "m6", "m7"], 5), out = [];
+      fs.forEach(function(k){ out.push(k + "|c"); out.push(k + "|u"); });
+      return out;
+    })(),
+    p5: pega(ITENS.p5, 8),
+    p6: ITENS.p6.slice(0),
+    p7: pega(ITENS.p7, 6),
+    p8: pega(ITENS.p8, 6),
+    p9: ITENS.p9.slice(0),
+    p10: ITENS.p10.slice(0),
+    p11: ITENS.p11.slice(0),
+    p12: ITENS.p12.slice(0),
+    p13: ITENS.p13.slice(0),
+    p14: ITENS.p14.slice(0),
+    p15: ITENS.p15.slice(0),
+    p16: ITENS.p16.slice(0),
+    p17: ITENS.p17.slice(0),
+    p18: ITENS.p18.slice(0),
+    p19: ITENS.p19.slice(0),
+    p20: ITENS.p20.slice(0),
+    p21: ITENS.p21.slice(0),
+    p22: ITENS.p22.slice(0)
+  };
+}</script>
+<!--<dossie-html>-->
+<div id="dossie" role="dialog" aria-label="Dossiê pedagógico" aria-modal="true">
+  <div class="cx">
+    <h3>Dossiê pedagógico</h3>
+    <div id="dsCorpo"></div>
+    <button class="bt cinza" id="dsFechar">Fechar</button>
+  </div>
+</div>
+<!--</dossie-html>-->
+<script src="folhas.js?v=0be66f41d3"></script>
+</body></html>

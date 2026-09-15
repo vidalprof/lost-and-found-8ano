@@ -1,0 +1,85 @@
+{
+ "ano": 8,
+ "componente": "Língua Inglesa",
+ "rede": "Currículo da Educação Básica do Sistema Municipal de Ensino de Blumenau",
+ "documento": "_curriculo/blumenau.txt",
+ "conceitos": [
+  "quantificadores some, any, many e much",
+  "pronomes relativos who, which, that e whose",
+  "períodos compostos por subordinação",
+  "substantivos contáveis e incontáveis"
+ ],
+ "fora_do_curriculo": [
+  {
+   "conceito": "substantivos contáveis e incontáveis (countable / uncountable)",
+   "onde": "folhas 1, 2, 3, 4 e 21",
+   "motivo": "O Quadro Organizador do 8º ano de Blumenau nomeia, em Gramática, os QUANTIFICADORES (some, any, many e much) — não nomeia, com essas palavras, o par contável/incontável. Ele entra assim mesmo, e por um motivo medido: das 54 folhas de papel colhidas na internet para este caderno, TODAS as trinta do primeiro lote tratam o quantificador junto com o par contável/incontável, porque é ele que decide entre much e many e entre a e some. Sem esse degrau, a criança escolhe por sorteio. São 5 folhas de 22, e elas são a ENTRADA do caderno, não o conteúdo dele."
+  },
+  {
+   "conceito": "a few, a little, a lot of, no, none e os partitivos (a bar of, a piece of)",
+   "onde": "em lugar nenhum — ficaram DE FORA de propósito",
+   "motivo": "Aparecem em quase todas as folhas colhidas (d03, d07, d09, d13, d20, d22, d27) e NÃO estão na citação do 8º ano, que nomeia quatro quantificadores. Estão registrados aqui para que o professor saiba que a escolha foi deliberada: o caderno mede os quatro do currículo e não cobra os outros."
+  },
+  {
+   "conceito": "where, when, whom e why como pronomes relativos",
+   "onde": "em lugar nenhum — ficaram DE FORA de propósito",
+   "motivo": "Onze das 24 folhas de pronomes relativos colhidas trazem where e when na mesma fileira de opções, e três trazem whom. O currículo do 8º ano nomeia QUATRO (who, which, that, whose). Deixá-los na fileira faria a criança errar por um conteúdo que o ano dela não ensina. As frases de lugar e de tempo das folhas de papel ficaram fora do caderno."
+  }
+ ],
+ "degrau": 1,
+ "evidencia": [
+  "Jogado do começo ao fim no navegador, item por item, antes de publicar.",
+  "Um jogador automático resolve cada item pela resposta declarada e confere se a folha fecha.",
+  "Leiaute medido em 6 tamanhos de tela: nenhuma figura cortada e nenhum alvo de toque menor que 40 px.",
+  "Toda tela é narrada com voz real — e as falas em inglês são gravadas com voz INGLESA, não com voz portuguesa lendo inglês.",
+  "Contraste do texto medido no pixel real do fundo, não na folha de estilo.",
+  "As figuras foram recortadas das próprias folhas de papel usadas em sala — a turma reencontra na tela o desenho da atividade impressa. Nenhuma foi gerada por IA.",
+  "Os comandos das 22 folhas foram copiados, palavra por palavra, das 54 folhas de papel colhidas; o crivo de todas está em _sequencias/POTE-ING8.md.",
+  "As habilidades citadas neste dossiê são conferidas, palavra por palavra, contra o currículo da rede."
+ ],
+ "observacoes": [
+  "⚠️ LEIA ESTA PRIMEIRO — POR QUE AS CITAÇÕES TÊM UM HÍFEN NO MEIO DA PALAVRA. O currículo de Blumenau é um PDF de 440 páginas diagramado em colunas estreitas, e a extração para texto guardou a hifenização de fim de linha: onde se lê 'contextualizadas' na página impressa, o arquivo traz 'com-textualizadas', e onde se lê 'compostos', traz 'com-postos'. As citações abaixo estão copiadas EXATAMENTE como o arquivo as traz, com o hífen — porque a regra desta casa é que a citação exista palavra por palavra no documento, e inventar a palavra inteira seria consertar o currículo por conta própria. O professor lê 'contextualizadas' e 'compostos'.",
+  "O CONTEÚDO É O DO 8º ANO, E ELE VEM DO EIXO CONHECIMENTOS LINGUÍSTICOS. Os dois objetos de conhecimento estão na unidade temática GRAMÁTICA do Quadro Organizador dos Conceitos do 8º ano (LÍNGUAS ADICIONAIS), e os dois são de Língua Inglesa, não de Língua Alemã: o quadro traz as duas línguas lado a lado, e a linha alemã (einige, viel, sehr, wenig) ficou fora deste caderno.",
+  "O PORTÃO DE CONCEITOS DIZ 'NÃO MEDI' NESTE CADERNO, e isso não é 'passou'. O _qa/pedagogo_curriculo.py só sabe recortar o bloco de um ano quando o PDF traz o cabeçalho no formato '<COMPONENTE> – ANOS FINAIS – 8º ANO'. Em Línguas Adicionais o PDF traz 'LÍNGUAS ADICIONAIS – 8º ANO', sem 'ANOS FINAIS', e o recorte não acontece. Medir no documento inteiro aprovaria conteúdo de qualquer ano, o que seria pior. Quem confere o ano aqui é o professor, com as citações acima — e elas são do quadro do 8º ano, conferidas à mão.",
+  "O QUE ESTE CADERNO NÃO MEDE: escrever a própria frase. Quatro das folhas de papel colhidas terminam com 'Make your own sentences' e 'Write one sentence using a relative pronoun' — produção escrita livre, que a tela não corrige. A folha 22 monta o cartaz que a criança leva, e é no caderno de papel, com o professor, que essa escrita acontece.",
+  "POR QUE O 'THAT' É MEDIDO NUMA FOLHA SÓ. Em toda frase de 'escolha o pronome' das 54 folhas colhidas, onde cabe 'who' também cabe 'that', e onde cabe 'which' também cabe 'that'. Pôr os quatro na mesma fileira de opções reprovaria a criança por uma resposta CERTA. Por isso o 'that' aparece na folha 12 (ela o acha dentro da frase pronta) e é medido na folha 17, em 'This is the bank that was robbed yesterday' — o único caso em que ele é indiscutível. E na folha 19, em que a criança digita, as seis frases têm vírgula: depois de vírgula o inglês não aceita 'that', e por isso o gabarito é único.",
+  "AS DUAS EXCEÇÕES DO 'SOME' ESTÃO ENSINADAS, NÃO ESCONDIDAS. 'Can I have some water?' e 'Would you like some sugar?' levam 'some' apesar de serem perguntas, porque são PEDIDO e OFERTA. Está no cartaz da folha d07 colhida ('some — It is also used in questions for offers and requests') e é o uso que o aluno mais precisa na vida. As duas entram na folha 5 com o porquê escrito."
+ ],
+ "objetivos": [
+  {
+   "objetivo": "Distinguir o que se conta do que não se conta",
+   "folhas": [1, 2, 3, 4, 21],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Quantificadores",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: utilizar os quantificadores (some, any, many e much) em práticas com-textualizadas.\""
+  },
+  {
+   "objetivo": "Usar some e any conforme a frase",
+   "folhas": [5, 6],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Quantificadores",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: utilizar os quantificadores (some, any, many e much) em práticas com-textualizadas.\""
+  },
+  {
+   "objetivo": "Perguntar quanto com much e many",
+   "folhas": [7, 8, 9, 10, 11],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Quantificadores",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: utilizar os quantificadores (some, any, many e much) em práticas com-textualizadas.\""
+  },
+  {
+   "objetivo": "Escolher o pronome relativo certo",
+   "folhas": [12, 13, 14, 15, 16, 17],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Pronomes relativos",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: construir períodos com-postos por subordinação para empregar os\""
+  },
+  {
+   "objetivo": "Juntar duas frases numa só com o pronome relativo",
+   "folhas": [18, 19, 20, 22],
+   "pratica": "Eixo Conhecimentos Linguísticos",
+   "objeto": "Gramática — Pronomes relativos",
+   "habilidade": "HABILIDADE: \"Língua Inglesa: construir períodos com-postos por subordinação para empregar os\""
+  }
+ ]
+}

@@ -12,8 +12,8 @@
  "fora_do_curriculo": [
   {
    "conceito": "substantivos contáveis e incontáveis (countable / uncountable)",
-   "onde": "folhas 1, 2, 3, 4 e 21",
-   "motivo": "O Quadro Organizador do 8º ano de Blumenau nomeia, em Gramática, os QUANTIFICADORES (some, any, many e much) — não nomeia, com essas palavras, o par contável/incontável. Ele entra assim mesmo, e por um motivo medido: das 54 folhas de papel colhidas na internet para este caderno, TODAS as trinta do primeiro lote tratam o quantificador junto com o par contável/incontável, porque é ele que decide entre much e many e entre a e some. Sem esse degrau, a criança escolhe por sorteio. São 5 folhas de 22, e elas são a ENTRADA do caderno, não o conteúdo dele."
+   "onde": "folhas 1 a 7, 12 e 34",
+   "motivo": "O Quadro Organizador do 8º ano de Blumenau nomeia, em Gramática, os QUANTIFICADORES (some, any, many e much) — não nomeia, com essas palavras, o par contável/incontável. Ele entra assim mesmo, e por um motivo medido: das 54 folhas de papel colhidas na internet para este caderno, TODAS as trinta do primeiro lote tratam o quantificador junto com o par contável/incontável, porque é ele que decide entre much e many e entre a e some. Sem esse degrau, a criança escolhe por sorteio. São 9 folhas de 35 — as sete da entrada do caderno mais duas de revisão espaçada (12 e 34) —, e elas são o degrau, não o conteúdo."
   },
   {
    "conceito": "a few, a little, a lot of, no, none e os partitivos (a bar of, a piece of)",
@@ -34,49 +34,91 @@
   "Toda tela é narrada com voz real — e as falas em inglês são gravadas com voz INGLESA, não com voz portuguesa lendo inglês.",
   "Contraste do texto medido no pixel real do fundo, não na folha de estilo.",
   "As figuras foram recortadas das próprias folhas de papel usadas em sala — a turma reencontra na tela o desenho da atividade impressa. Nenhuma foi gerada por IA.",
-  "Os comandos das 22 folhas foram copiados, palavra por palavra, das 54 folhas de papel colhidas; o crivo de todas está em _sequencias/POTE-ING8.md.",
+  "Os comandos das 35 folhas foram copiados, palavra por palavra, das 54 folhas de papel colhidas; o crivo de todas está em _sequencias/POTE-ING8.md.",
   "As habilidades citadas neste dossiê são conferidas, palavra por palavra, contra o currículo da rede."
  ],
  "observacoes": [
   "⚠️ LEIA ESTA PRIMEIRO — POR QUE AS CITAÇÕES TÊM UM HÍFEN NO MEIO DA PALAVRA. O currículo de Blumenau é um PDF de 440 páginas diagramado em colunas estreitas, e a extração para texto guardou a hifenização de fim de linha: onde se lê 'contextualizadas' na página impressa, o arquivo traz 'com-textualizadas', e onde se lê 'compostos', traz 'com-postos'. As citações abaixo estão copiadas EXATAMENTE como o arquivo as traz, com o hífen — porque a regra desta casa é que a citação exista palavra por palavra no documento, e inventar a palavra inteira seria consertar o currículo por conta própria. O professor lê 'contextualizadas' e 'compostos'.",
   "O CONTEÚDO É O DO 8º ANO, E ELE VEM DO EIXO CONHECIMENTOS LINGUÍSTICOS. Os dois objetos de conhecimento estão na unidade temática GRAMÁTICA do Quadro Organizador dos Conceitos do 8º ano (LÍNGUAS ADICIONAIS), e os dois são de Língua Inglesa, não de Língua Alemã: o quadro traz as duas línguas lado a lado, e a linha alemã (einige, viel, sehr, wenig) ficou fora deste caderno.",
   "O PORTÃO DE CONCEITOS DIZ 'NÃO MEDI' NESTE CADERNO, e isso não é 'passou'. O _qa/pedagogo_curriculo.py só sabe recortar o bloco de um ano quando o PDF traz o cabeçalho no formato '<COMPONENTE> – ANOS FINAIS – 8º ANO'. Em Línguas Adicionais o PDF traz 'LÍNGUAS ADICIONAIS – 8º ANO', sem 'ANOS FINAIS', e o recorte não acontece. Medir no documento inteiro aprovaria conteúdo de qualquer ano, o que seria pior. Quem confere o ano aqui é o professor, com as citações acima — e elas são do quadro do 8º ano, conferidas à mão.",
-  "O QUE ESTE CADERNO NÃO MEDE: escrever a própria frase. Quatro das folhas de papel colhidas terminam com 'Make your own sentences' e 'Write one sentence using a relative pronoun' — produção escrita livre, que a tela não corrige. A folha 22 monta o cartaz que a criança leva, e é no caderno de papel, com o professor, que essa escrita acontece.",
-  "POR QUE O 'THAT' É MEDIDO NUMA FOLHA SÓ. Em toda frase de 'escolha o pronome' das 54 folhas colhidas, onde cabe 'who' também cabe 'that', e onde cabe 'which' também cabe 'that'. Pôr os quatro na mesma fileira de opções reprovaria a criança por uma resposta CERTA. Por isso o 'that' aparece na folha 12 (ela o acha dentro da frase pronta) e é medido na folha 17, em 'This is the bank that was robbed yesterday' — o único caso em que ele é indiscutível. E na folha 19, em que a criança digita, as seis frases têm vírgula: depois de vírgula o inglês não aceita 'that', e por isso o gabarito é único.",
-  "AS DUAS EXCEÇÕES DO 'SOME' ESTÃO ENSINADAS, NÃO ESCONDIDAS. 'Can I have some water?' e 'Would you like some sugar?' levam 'some' apesar de serem perguntas, porque são PEDIDO e OFERTA. Está no cartaz da folha d07 colhida ('some — It is also used in questions for offers and requests') e é o uso que o aluno mais precisa na vida. As duas entram na folha 5 com o porquê escrito."
+  "O QUE ESTE CADERNO NÃO MEDE: escrever a própria frase. Quatro das folhas de papel colhidas terminam com 'Make your own sentences' e 'Write one sentence using a relative pronoun' — produção escrita livre, que a tela não corrige. A folha 35 monta o cartaz que a criança leva, e é no caderno de papel, com o professor, que essa escrita acontece.",
+  "POR QUE O 'THAT' É MEDIDO EM POUCAS FOLHAS, E QUAIS. Em toda frase de 'escolha o pronome' das 54 folhas colhidas, onde cabe 'who' também cabe 'that', e onde cabe 'which' também cabe 'that'. Pôr os quatro na mesma fileira de opções reprovaria a criança por ter escolhido uma resposta CERTA — por isso as folhas 20, 21 e 22 não o oferecem. Ele aparece e é medido nos quatro lugares em que é indiscutível: folha 19 (ela o ACHA dentro da frase pronta), folha 27 ('This is the bank that was robbed yesterday' está certa), folha 23 (o quiz da b09, cujo item c4 não traz 'which' entre as quatro alternativas) e folha 24 ('the most famous novel that Lewis Carroll wrote' — depois de superlativo, o inglês pede 'that'). E na folha 32, em que a criança DIGITA, as seis frases têm vírgula: depois de vírgula o inglês não aceita 'that', e por isso o gabarito é único.",
+  "AS DUAS EXCEÇÕES DO 'SOME' ESTÃO ENSINADAS, NÃO ESCONDIDAS. 'Can I have some water?' e 'Would you like some sugar?' levam 'some' apesar de serem perguntas, porque são PEDIDO e OFERTA. Está no cartaz da folha d07 colhida ('some — It is also used in questions for offers and requests') e é o uso que o aluno mais precisa na vida. As duas entram na folha 8 com o porquê escrito.",
+  "POR QUE 35 FOLHAS. O Marcos cronometrou a turma em 15/set/2026 e disse: \"verifiquei a execução das atividades, essas 20 25 folhas duram 30 minutos, precisamos elevar um pouco mais as folhas para umas 35 folhas\". A aula do laboratório tem 55 min. Este caderno foi montado com 22 folhas e CRESCEU para 35 antes de ir ao ar — e nenhuma das treze que entraram é folha de enchimento: todas saíram do mesmo crivo, de folhas de papel que tinham ficado de fora por falta de lugar (a receita da pizza, o safári, o cardápio do restaurante, a cultura britânica, a tabela que desmonta a frase em peças, o quiz de quatro alternativas).",
+  "A ESTRATÉGIA DO PAR DE FOLHAS, e o limite dela. Ideia do Marcos, na mesma conversa: \"repetir o mesmo exercício em duas folhas, claro questões diferentes\" — \"só não dobrar quando for cruzadinha, memória, caça palavras, forca\". Ela está usada aqui com uma condição que a casa já tinha: a SEGUNDA folha do par sobe um degrau, senão a criança diz \"isso eu já fiz\". Os pares deste caderno: 30 e 31 (na 30 a parte que explica entra no fim da frase; na 31, no meio, entre vírgulas); 19 e 28 (na 19 ela acha o pronome; na 28, a oração inteira); 2, 3 e 29 (duas gavetas, três gavetas, e depois gavetas de pedaços de frase); 12 e 34 (contável e incontável no safári e no balcão)."
  ],
  "objetivos": [
   {
    "objetivo": "Distinguir o que se conta do que não se conta",
-   "folhas": [1, 2, 3, 4, 21],
+   "folhas": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    12,
+    34
+   ],
    "pratica": "Eixo Conhecimentos Linguísticos",
    "objeto": "Gramática — Quantificadores",
    "habilidade": "HABILIDADE: \"Língua Inglesa: utilizar os quantificadores (some, any, many e much) em práticas com-textualizadas.\""
   },
   {
    "objetivo": "Usar some e any conforme a frase",
-   "folhas": [5, 6],
+   "folhas": [
+    8,
+    9,
+    10,
+    11
+   ],
    "pratica": "Eixo Conhecimentos Linguísticos",
    "objeto": "Gramática — Quantificadores",
    "habilidade": "HABILIDADE: \"Língua Inglesa: utilizar os quantificadores (some, any, many e much) em práticas com-textualizadas.\""
   },
   {
    "objetivo": "Perguntar quanto com much e many",
-   "folhas": [7, 8, 9, 10, 11],
+   "folhas": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+   ],
    "pratica": "Eixo Conhecimentos Linguísticos",
    "objeto": "Gramática — Quantificadores",
    "habilidade": "HABILIDADE: \"Língua Inglesa: utilizar os quantificadores (some, any, many e much) em práticas com-textualizadas.\""
   },
   {
    "objetivo": "Escolher o pronome relativo certo",
-   "folhas": [12, 13, 14, 15, 16, 17],
+   "folhas": [
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    26,
+    27
+   ],
    "pratica": "Eixo Conhecimentos Linguísticos",
    "objeto": "Gramática — Pronomes relativos",
    "habilidade": "HABILIDADE: \"Língua Inglesa: construir períodos com-postos por subordinação para empregar os\""
   },
   {
    "objetivo": "Juntar duas frases numa só com o pronome relativo",
-   "folhas": [18, 19, 20, 22],
+   "folhas": [
+    25,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    35
+   ],
    "pratica": "Eixo Conhecimentos Linguísticos",
    "objeto": "Gramática — Pronomes relativos",
    "habilidade": "HABILIDADE: \"Língua Inglesa: construir períodos com-postos por subordinação para empregar os\""

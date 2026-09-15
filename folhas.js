@@ -26,15 +26,19 @@ var livro = document.getElementById("livro"), PAGEL = [], TIRAS = [];
    apontada por engano FECHAVA SOZINHA, sem ninguém tocar nela. São as únicas
    cujos ids não nascem de `n<pi>_`, e sim dentro do `montaLigar`
    (`l<pi>g<i>_<chave>`). Conferir com `node _qa/conta_folha.js <pasta>`. */
-/* as folhas de LIGAR: 11 (pergunta -> resposta curta) e 16 (o nome -> a
-   definicao). Os ids delas nascem dentro do `montaLigar`, nao de `n<pi>_`. */
-var LIGAR = [11, 16];
+/* as folhas de LIGAR: 4 (figura -> nome), 18 (pergunta -> resposta curta),
+   25 (comeco da frase -> fim dela) e 26 (o nome -> a definicao). Os ids delas
+   nascem dentro do `montaLigar`, nao de `n<pi>_`. */
+var LIGAR = [4, 18, 25, 26];
 /* a cor da faixa por BLOCO da escada, não por folha: a criança vê que o assunto
    mudou. Uma entrada por folha, de c1 a c5. */
-/* uma cor por BLOCO da escada: 1-4 o que se conta · 5-6 some/any · 7-11
-   quanto · 12-17 qual pronome · 18-22 juntar as duas frases */
-var CORES = ["c1","c1","c1","c1","c2","c2","c3","c3","c3","c3","c3",
-             "c4","c4","c4","c4","c4","c4","c5","c5","c5","c5","c5"];
+/* uma cor por BLOCO da escada: 1-7 o que se conta · 8-13 some/any ·
+   14-18 quanto · 19-26 qual pronome · 27-35 juntar as duas frases */
+var CORES = ["c1","c1","c1","c1","c1","c1","c1",
+             "c2","c2","c2","c2","c2","c2",
+             "c3","c3","c3","c3","c3",
+             "c4","c4","c4","c4","c4","c4","c4","c4",
+             "c5","c5","c5","c5","c5","c5","c5","c5","c5"];
 
 
 function faixa(d, i, titulo){ d.appendChild(el("div", "faixa", '<div class="num">' + i + '</div><h2>' + titulo + '</h2>')); }
@@ -188,7 +192,8 @@ function monta(){
   livro.innerHTML = ""; PAGEL = []; RESP = {}; TIRAS = [];
   /* ⚠️ UMA ENTRADA POR FOLHA, na ordem, começando pela capa `f0`. */
   var caps = [f0, f01, f02, f03, f04, f05, f06, f07, f08, f09, f10, f11,
-             f12, f13, f14, f15, f16, f17, f18, f19, f20, f21, f22], i;
+             f12, f13, f14, f15, f16, f17, f18, f19, f20, f21, f22, f23,
+             f24, f25, f26, f27, f28, f29, f30, f31, f32, f33, f34, f35], i;
   for(i = 0; i < caps.length; i++){
     var d = el("div", "pagina" + (i > 0 ? " " + CORES[i - 1] : "")); d.setAttribute("data-pag", i);
     caps[i](d, i);
@@ -213,7 +218,7 @@ function f0(d){
   c.innerHTML =
     '<div class="ceu"><i class="nv n1"></i><i class="nv n2"></i><i class="nv n3"></i><i class="sol"></i></div>' +
     '<h1 class="titu">' + letras + '</h1>' +
-    '<div class="sub">Inglês &middot; 8º ano &middot; 22 folhas de some, any, much, many e os pronomes who, which, that e whose</div>' +
+    '<div class="sub">Inglês &middot; 8º ano &middot; 35 folhas de some, any, much, many e os pronomes who, which, that e whose</div>' +
     '<div class="chamada">Você vai atender o balcão de <b>achados e perdidos</b> de um aeroporto. Escreva o seu nome ali embaixo e toque em <b>Começar</b>.</div>';
   d.appendChild(c);
 }
@@ -797,11 +802,11 @@ var PESO_PRIMEIRA = 1.0, PESO_COM_AJUDA = 0.6;
          ok:  "faz o que o objetivo pede, em palavras do professor",
          nao: "o que ainda não faz — sem a palavra 'errou'"}  */
 var OBJETIVOS = [
-  {n: "Distinguir o que se conta do que não se conta", f: [1, 2, 3, 4, 21]},
-  {n: "Usar some e any conforme a frase", f: [5, 6]},
-  {n: "Perguntar quanto com much e many", f: [7, 8, 9, 10, 11]},
-  {n: "Escolher o pronome relativo certo", f: [12, 13, 14, 15, 16, 17]},
-  {n: "Juntar duas frases numa só com o pronome relativo", f: [18, 19, 20, 22]}
+  {n: "Distinguir o que se conta do que não se conta", f: [1, 2, 3, 4, 5, 6, 7, 12, 34]},
+  {n: "Usar some e any conforme a frase", f: [8, 9, 10, 11]},
+  {n: "Perguntar quanto com much e many", f: [13, 14, 15, 16, 17, 18]},
+  {n: "Escolher o pronome relativo certo", f: [19, 20, 21, 22, 23, 24, 26, 27]},
+  {n: "Juntar duas frases numa só com o pronome relativo", f: [25, 28, 29, 30, 31, 32, 33, 35]}
 ];
 
 function mede(folhas){
@@ -1171,7 +1176,7 @@ function f03(d, pi){ gavetas(d, pi, "cp2",
    ⚠️ DUAS POSIÇÕES DO POTE POR FRASE (`m1|c` e `m1|u`): com uma posição só, a
       folha se daria por pronta com metade das palavras marcadas. Quem conta os
       itens é o tamanho do pote (`node _qa/conta_folha.js`). */
-function f04(d, pi){
+function f07(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Escolha a marca e toque na palavra: o que <b>se conta</b>, " +
             "ou o que <b>não se conta</b>.", "p" + pi + "enun");
@@ -1251,7 +1256,7 @@ function f04(d, pi){
       no cartaz da d07 (*"some — It is also used in questions for offers and
       requests"*) e é o uso que o aluno mais precisa na vida. O porquê aparece
       escrito no acerto. */
-function f05(d, pi){
+function f08(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Olhe se a frase <b>diz que tem</b>, se ela <b>nega</b> ou " +
             "se ela <b>pergunta</b>. Depois escolha.", "p" + pi + "enun");
@@ -1281,7 +1286,7 @@ function f05(d, pi){
    ⚠️ AS FIGURAS SAEM DA FOLHA DE PAPEL, recortadas da d24 — ordem do Marcos de
       14/set/2026: *"procure na internet, nada de imagem gerada por IA, utilize
       das atividades"*. Qual veio de onde está em `img/ORIGEM.json`. */
-function f06(d, pi){
+function f09(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Olhe a figura e escolha: <b>a</b>, <b>an</b>, <b>some</b> " +
             "ou <b>any</b>?", "p" + pi + "enun");
@@ -1292,7 +1297,7 @@ function f06(d, pi){
     box.appendChild(c);
     var lin = el("div", "enunlin");
     lin.appendChild(el("div", "frasel", V.a + ' <i class="lacuna"></i> ' + V.b));
-    lin.appendChild(botaoSom("Ouvir a frase", function(){ falar("mala_" + k); }));
+    lin.appendChild(botaoSom("Ouvir a frase", function(){ falar("malafr_" + k); }));
     box.appendChild(lin);
     opcoes(box, pi, id,
            baralha([{v: "a", rot: "a", aria: "a", fala: "op_a"},
@@ -1313,7 +1318,7 @@ function f06(d, pi){
    ⚠️ A FOLHA DE PAPEL TEM DEZOITO FRASES E CATORZE SÃO `many` — copiar a lista
       inteira ensinaria a criança a chutar `many` e acertar. Escolhi oito,
       quatro e quatro. */
-function f07(d, pi){
+function f14(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Olhe a palavra que vem <b>depois</b> da lacuna: ela se " +
             "conta ou não?", "p" + pi + "enun");
@@ -1341,7 +1346,7 @@ function f07(d, pi){
       para julgar: quem percebesse o padrão responderia "errada" sempre e
       acertaria tudo sem ler nenhuma. Metade daqui está CERTA — e as certas são
       as próprias frases dela, consertadas. */
-function f08(d, pi){
+function f13(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Esta frase em inglês está <b>certa</b>, ou tem alguma " +
             "coisa errada?", "p" + pi + "enun");
@@ -1370,7 +1375,7 @@ function f08(d, pi){
       uma festa de aniversário; este é no balcão, porque é o mundo deste caderno.
    ⭐ E É A ÚNICA FOLHA EM QUE TUDO APARECE JUNTO: some, any, much e many numa
       conversa só — que é como eles aparecem na vida, e não em listas separadas. */
-function f09(d, pi){
+function f15(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   var cab = el("div", "enunlin");
   cab.appendChild(el("div", "ajuda", DIALOGO.titulo));
@@ -1416,7 +1421,7 @@ function f09(d, pi){
       lição paga na Loteria do S — com a frase pronta ninguém, nem o jogador da
       banca nem o relatório, sabia em que ordem tocar, e a folha ficava sem
       medida nenhuma. */
-function f10(d, pi){
+function f17(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Esta é a <b>resposta</b>. Monte a <b>pergunta</b> tocando " +
             "nos pedaços na ordem certa.", "p" + pi + "enun");
@@ -1467,7 +1472,7 @@ function f10(d, pi){
    ⚠️ FOLHA DE LIGAR: os ids dela nascem dentro do `montaLigar` e ela está
       declarada em `var LIGAR` lá em cima. Errar esse número quebra DUAS folhas
       de uma vez — a que liga nunca fecha e a apontada fecha sozinha. */
-function f11(d, pi){
+function f18(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Toque na <b>pergunta</b> e depois na <b>resposta</b> que " +
             "combina com ela.", "p" + pi + "enun");
@@ -1494,7 +1499,7 @@ function f11(d, pi){
       falta em quase toda folha de papel, que já começa cobrando a escolha.
    ⭐ E É AQUI QUE O `that` APARECE PELA PRIMEIRA VEZ — sem ter de ser escolhido,
       só reconhecido (o porquê disso está no comentário da folha 14). */
-function f12(d, pi){
+function f19(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Em cada frase há <b>um</b> pronome relativo. Toque nele.",
             "p" + pi + "enun");
@@ -1542,7 +1547,7 @@ function f12(d, pi){
       nomeia QUATRO pronomes (who, which, that, whose) e `where` não está entre
       eles. Deixá-lo na fileira faria a criança errar por um conteúdo que o ano
       dela não ensina — e as frases de lugar da folha ficaram fora do caderno. */
-function f13(d, pi){
+function f20(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Olhe a palavra que vem <b>antes</b> da lacuna: é gente ou " +
             "é coisa?", "p" + pi + "enun");
@@ -1574,7 +1579,7 @@ function f13(d, pi){
       a folha 12, onde ela o acha dentro da frase pronta, e a folha 17, onde ela
       julga *"This is the bank THAT was robbed yesterday"*, que é o único caso
       em que ele é indiscutível. Está escrito no dossiê do professor. */
-function f14(d, pi){
+function f21(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Agora são <b>três</b>. Se a coisa depois da lacuna é " +
             "<b>de alguém</b>, o pronome é outro.", "p" + pi + "enun");
@@ -1605,7 +1610,7 @@ function f14(d, pi){
    ⭐ E É A FOLHA DO BALCÃO: *"the girl whose car had broken down"*, *"the man
       whose father is a professor"* — identificar alguém por uma coisa que é
       dele é o que se faz num balcão de achados e perdidos o dia inteiro. */
-function f15(d, pi){
+function f22(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Olhe a palavra que vem <b>depois</b> da lacuna: se for uma " +
             "<b>coisa de alguém</b>, é whose.", "p" + pi + "enun");
@@ -1638,7 +1643,7 @@ function f15(d, pi){
       reprovaria na regra de resolução do `_qa/leiaute_mao.js` (1,35×) — e
       ampliar figura é exatamente o que o Marcos mandou parar de fazer em
       14/set. O que entra desta folha é o TEXTO. */
-function f16(d, pi){
+function f26(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Toque no <b>nome</b> e depois na <b>explicação</b> dele.",
             "p" + pi + "enun");
@@ -1667,7 +1672,7 @@ function f16(d, pi){
    ⭐ E É AQUI QUE O `that` É MEDIDO: *"This is the bank THAT was robbed
       yesterday"* está CERTA, e é o único lugar do caderno em que isso não admite
       discussão (ver o comentário da folha 14). */
-function f17(d, pi){
+function f27(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Olhe o pronome <b>em negrito</b>. Ele está no lugar certo?",
             "p" + pi + "enun");
@@ -1702,7 +1707,7 @@ function f17(d, pi){
    ⚠️ O QUE SE MEDE AQUI É A ORDEM — o pronome já vem escrito na peça. Quem mede
       a ESCOLHA do pronome é a folha 19, no teclado. Duas decisões diferentes,
       duas folhas. */
-function f18(d, pi){
+function f30(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Junte as <b>duas frases numa só</b>. Toque nos pedaços na " +
             "ordem certa.", "p" + pi + "enun");
@@ -1760,7 +1765,7 @@ function f18(d, pi){
       UMA palavra só. Em inglês não há acento, então o alfabeto basta.
    ⚠️ AS DUAS PORTAS: o teclado da tela e o teclado DE VERDADE funcionam juntos —
       no PC da escola a criança vai digitar. */
-function f19(d, pi){
+function f32(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Escreva o pronome que falta. Repare: toda frase aqui tem " +
             "<b>vírgula</b> — e depois de vírgula o inglês nunca usa that.",
@@ -1801,7 +1806,7 @@ function f19(d, pi){
       pronome é aquele. É o conceito vindo por ÚLTIMO, que é a lei da casa — a
       criança já usou os quatro pronomes em oito folhas; só agora ela é
       convidada a dizer a regra com as próprias palavras. */
-function f20(d, pi){
+function f33(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   var cab = el("div", "enunlin");
   cab.appendChild(el("div", "ajuda", TEXTO.titulo));
@@ -1839,7 +1844,7 @@ function f20(d, pi){
       caderno com o vocabulário que abriu.
    ⚠️ AQUI ELA MARCA VÁRIAS E SÓ DEPOIS CONFERE: pode mudar de ideia antes de
       entregar, que é uma decisão diferente de responder uma por uma. */
-function f21(d, pi){
+function f34(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Marque <b>todas</b> as palavras que <b>não se contam</b>. " +
             "Depois toque em <b>Conferir</b>.", "p" + pi + "enun");
@@ -1905,7 +1910,7 @@ function f21(d, pi){
    ⚠️ AQUI NÃO HÁ RESPOSTA CERTA NEM ERRADA. A criança escolhe as regras que quer
       levar, e o portão do "beco sem saída" precisa disso declarado: toda peça é
       alvo. */
-function f22(d, pi){
+function f35(d, pi){
   faixa(d, pi, NOMES[pi - 1]);
   enunciado(d, pi, "Escolha as regras que você quer no <b>seu cartaz</b>. " +
             "Pode escolher quantas quiser.", "p" + pi + "enun");
@@ -1943,4 +1948,501 @@ function f22(d, pi){
   d.appendChild(el("div", "ajuda", "O seu cartaz:"));
   d.appendChild(cartaz);
   pintaCartaz();
+}
+
+/* ############################################################
+   AS TREZE FOLHAS QUE VIERAM COM O PISO DE 35 (15/set/2026)
+
+   ⭐ O MARCOS CRONOMETROU: *"essas 20 25 folhas duram 30 minutos, precisamos
+      elevar um pouco mais as folhas para umas 35 folhas"*. E logo depois deu a
+      estratégia: *"repetir o mesmo exercício em duas folhas, claro questões
+      diferentes"*, com o limite dele — *"só não dobrar quando for cruzadinha,
+      memória, caça palavras, forca"*.
+   ⚠️ E A CONDIÇÃO DA CASA CONTINUA VALENDO em cima da ideia dele: a segunda
+      folha do par SOBE UM DEGRAU, senão a criança diz "isso eu já fiz". Aqui:
+      a 31 põe a oração no MEIO da frase (a 30 punha no fim); a 28 pede a
+      ORAÇÃO inteira (a 19 pedia só o pronome); a 12 volta ao contável num
+      mundo novo (o safári).
+   ⚠️ NENHUMA DELAS É FOLHA DE ENCHIMENTO: todas saíram do mesmo crivo
+      (`_sequencias/POTE-ING8.md`), de folhas que ficaram de fora por falta de
+      lugar, não por falta de valor.
+   ############################################################ */
+
+/* ============ 4 — MATCH THE PICTURES ============
+   Da d07 (eslprintables), VERBATIM: *"Are the following countable or
+   uncountable? Match the pictures with the nouns"*; e da d20, *"MATCH THE
+   PICTURES TO THE NOUNS"*.
+   ⭐ O DEGRAU CONCRETO DO BLOCO: nas folhas 1 a 3 a criança lia a palavra; aqui
+      ela vê a coisa e tem de achar o nome dela em inglês. É a mesma mala que
+      volta na folha 9 — reencontrar a figura ajuda, não atrapalha. */
+function f04(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Toque na <b>figura</b> e depois no <b>nome</b> dela em inglês.",
+            "p" + pi + "enun");
+  var grupo = ST.folha["p" + pi][0];
+  var pares = grupo.map(function(k){
+    return {k: k,
+            esq: img(LIGAFIG[k].f, "figop", LIGAFIG[k].alt),
+            dir: LIGAFIG[k].p,
+            ariaE: LIGAFIG[k].alt, ariaD: LIGAFIG[k].p,
+            fe: "ligafige_" + k, fd: "ligafigd_" + k,
+            fc: "certo" + pi + "_" + k, dica: "dica" + pi + "_" + k};
+  });
+  var cx = el("div", "");
+  montaLigar(cx, pi, "g0", pares, d);
+  d.appendChild(cx);
+}
+
+/* ============ 5 — A, AN ou nada? ============
+   Da d26 (iSLCollective), VERBATIM: *"2.- Write A or AN or – if no article is
+   needed."*
+   ⭐ A TERCEIRA OPÇÃO É A QUE ENSINA: o traço. `rice`, `sugar` e `ice cream`
+      não levam artigo nenhum, e é exatamente aí que o aluno brasileiro erra —
+      em português a gente diz *"o arroz"*, e ele escreve *"a rice"*.
+   ⚠️ A chave da resposta "nenhum artigo" é `x`, e não `-`: hífen dentro de um
+      `data-qa` vira separador e o jogador da banca perde a peça. */
+function f05(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "O que vem antes desta palavra: <b>a</b>, <b>an</b>, ou " +
+            "<b>nada</b>?", "p" + pi + "enun");
+  ST.folha["p" + pi].forEach(function(k, i){
+    var T = ARTIGO[k], id = "n" + pi + "_" + i, box = item(i + 1);
+    var lin = el("div", "enunlin");
+    var pal = el("div", "pgrande", T.p);
+    pal.setAttribute("data-alvo", "1");
+    lin.appendChild(pal);
+    lin.appendChild(botaoSom("Ouvir a palavra", function(){ falar("art_" + k); }));
+    box.appendChild(lin);
+    opcoes(box, pi, id,
+           [{v: "a", rot: "a", aria: "a", fala: "op_a"},
+            {v: "an", rot: "an", aria: "an", fala: "op_an"},
+            {v: "x", rot: "— nada —", aria: "nenhum artigo", fala: "op_nada"}],
+           T.r, "pal", "certo" + pi + "_" + k, "dica" + pi + "_" + k);
+    fechaItem(d, box, id);
+  });
+}
+
+/* ============ 6 — WRITE THE CORRECT FORM ============
+   Da d02 (iSLCollective), VERBATIM: *"2. Write the words in the correct form:"*
+   ⭐ ESCREVER O PLURAL É O QUE FECHA O BLOCO DO CONTÁVEL: dizer que `apple` se
+      conta é uma coisa; escrever `apples`, `tomatoes` e `dresses` com a mão é
+      outra. E os três plurais difíceis do inglês estão aqui — o `-es` depois
+      de o, de ss e de ch.
+   ⚠️ AS DUAS PORTAS: o teclado da tela e o teclado DE VERDADE, juntos. */
+function f06(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Escreva a palavra do parêntese no <b>plural</b>.",
+            "p" + pi + "enun");
+  ST.folha["p" + pi].forEach(function(k, i){
+    var L = PLURAL[k], id = "n" + pi + "_" + i, box = item(i + 1);
+    registra(id, pi, L.r);
+    var lin = el("div", "enunlin");
+    var fr = el("div", "frasel", L.a + ' <i class="lacuna"></i> ' + L.b);
+    lin.appendChild(fr);
+    lin.appendChild(botaoSom("Ouvir a frase", function(){ falar("plu_" + k); }));
+    box.appendChild(lin);
+    var dado = el("div", "ajuda", "(" + L.d + ")");
+    dado.setAttribute("data-alvo", "1");
+    box.appendChild(dado);
+    var grade = el("div", "cruz uma"), cels = [], t;
+    grade.setAttribute("data-qa", "esc-" + id);
+    for(t = 0; t < L.r.length; t++){
+      var c = el("button", "ccel viva" + (ST.resp[id] ? " ok" : ""),
+                 ST.resp[id] ? L.r.charAt(t) : "");
+      c.setAttribute("aria-label", "Casa da palavra");
+      cels.push(c); grade.appendChild(c);
+    }
+    var E = {k: k, w: L.r, id: id, cels: cels, n: i + 1,
+             rot: "Escreva no plural", bt: el("span", "pista oculta", "")};
+    cels.forEach(function(c){ c.onclick = function(){ if(!ST.resp[id]) abreCruz(E, pi); }; });
+    grade.onclick = function(){ if(!ST.resp[id]) abreCruz(E, pi); };
+    box.appendChild(grade);
+    fechaItem(d, box, id);
+  });
+}
+
+/* ============ 10 — O BILHETE DO SAFÁRI ============
+   Da d21 (eslprintables), VERBATIM: *"Complete with some or any:"* — e as cinco
+   frases são dela, palavra por palavra.
+   ⭐ A d21 É A ÚNICA DAS TRINTA FOLHAS DE QUANTIFICADOR QUE SAI DA COZINHA:
+      zebra, leão, crocodilo, barraca, marshmallow de fogueira. Um acampamento
+      de safári é contexto de 8º ano; comida com figurinha não é.
+   ⚠️ O que é MEU aqui é só o envelope: as frases dela viraram um BILHETE, para
+      o quantificador aparecer dentro de um texto e não numa lista solta. */
+function f10(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  var cab = el("div", "enunlin");
+  cab.appendChild(el("div", "ajuda", BILHETE.titulo));
+  cab.appendChild(botaoSom("Ouvir de que se trata", function(){ falar("biltit"); }));
+  d.appendChild(cab);
+  enunciado(d, pi, "Preencha o bilhete: <b>some</b> ou <b>any</b>?",
+            "p" + pi + "enun");
+  var pos = {};
+  ST.folha["p" + pi].forEach(function(g, i){ pos[g] = "n" + pi + "_" + i; });
+  BILHETE.linhas.forEach(function(L, n){
+    var box = item(n + 1);
+    var lin = el("div", "enunlin");
+    lin.appendChild(el("div", "frasel",
+      L.t.replace(/___/g, '<i class="lacuna"></i>')));
+    lin.appendChild(botaoSom("Ouvir esta linha", function(){ falar("bil_" + n); }));
+    box.appendChild(lin);
+    var C = BILHETE.lac[L.g], id = pos[L.g];
+    opcoes(box, pi, id,
+           baralha([{v: "some", rot: "some", aria: "some", fala: "op_some"},
+                    {v: "any", rot: "any", aria: "any", fala: "op_any"}]),
+           C.r, "pal", "certo" + pi + "_" + L.g, "dica" + pi + "_" + L.g,
+           function(){ var x = el("div", "ajuda");
+                       x.appendChild(nomeSecreto(C.pq, id)); box.appendChild(x); });
+    fechaItem(d, box, id);
+  });
+}
+
+/* ============ 11 — LET'S MAKE A PIZZA ============
+   Da d05 (eslprintables), VERBATIM: a lista de ingredientes e o bloco
+   *"Understanding:"* com as perguntas de `any`.
+   ⭐ LER PARA RESPONDER, e não para traduzir: a criança procura no texto se o
+      ingrediente está lá e responde com a forma curta (*Yes, we do / No, we
+      don't*). É o `any` dentro de uma tarefa de leitura, que é o que o
+      currículo chama de prática contextualizada.
+   ⚠️ A FOLHA DE PAPEL ESCREVE *"Tomato source"*, e isso é erro dela (molho é
+      *sauce*; *source* é fonte). Corrigi, e está declarado no dossiê — copiar o
+      erro seria ensinar errado. Duas perguntas dela ficaram fora pelo mesmo
+      motivo (*"Do we have to wait any time after prepare the pizza?"*). */
+function f11(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  var cab = el("div", "enunlin");
+  cab.appendChild(el("div", "ajuda", PIZZA.titulo));
+  cab.appendChild(botaoSom("Ouvir a receita", function(){ falar("rec_" + PIZZA.k); }));
+  d.appendChild(cab);
+  d.appendChild(el("div", "textao", PIZZA.corpo));
+  enunciado(d, pi, "Olhe a receita e responda.", "p" + pi + "enun");
+  ST.folha["p" + pi].forEach(function(qk, i){
+    var P = PIZZA.perg[parseInt(qk.slice(1), 10)];
+    if(!P) return;
+    var id = "n" + pi + "_" + i, box = item(i + 1);
+    var lin = el("div", "enunlin");
+    lin.appendChild(el("div", "enun", P.q));
+    lin.appendChild(botaoSom("Ouvir a pergunta", function(){ falar("pizq_" + i); }));
+    box.appendChild(lin);
+    var lista = P.o.map(function(w, x){
+      return {v: "o" + x, rot: w, aria: w, fala: "pizr_" + i + "_" + x};
+    });
+    opcoes(box, pi, id, lista, "o" + P.r, "pal",
+           "certo" + pi + "_" + i, "dica" + pi + "_" + i,
+           function(){ var x2 = el("div", "ajuda");
+                       x2.appendChild(nomeSecreto(P.pq, id)); box.appendChild(x2); });
+    fechaItem(d, box, id);
+  });
+}
+
+/* ============ 12 — O QUE CABE NA MOCHILA ============
+   Da d21, VERBATIM: *"Classify the following words in countable (C) or
+   uncountable(U):"*
+   ⭐ REVISÃO ESPAÇADA ainda dentro do caderno (Roediger, Bjork), e num mundo
+      DIFERENTE: a mesma ideia do bloco 1, agora com o vocabulário do safári. É
+      trocar o contexto que faz a revisão valer — repetir a mesma lista seria só
+      repetir a mesma tela.
+   ⚠️ A folha de papel tem sete contáveis e três incontáveis, e marcar três de
+      dez é fácil demais; `sand` e `grass` entraram para ficar sete e cinco, e
+      estão declarados no bloco de dados. */
+function f12(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Marque <b>tudo</b> o que <b>não se conta</b>. Depois toque " +
+            "em <b>Conferir</b>.", "p" + pi + "enun");
+  var id = "n" + pi + "_0", lista = ST.folha["p" + pi][0], certas = [];
+  lista.forEach(function(k){ if(MOCHILA[k].inc) certas.push(k); });
+  registra(id, pi, certas.join(" "));
+  var box = item(0);
+  var cx = el("div", "marcax fichas"), marcadas = {}, bts = {};
+  baralha(lista.slice(0)).forEach(function(k){
+    var b = el("button", "lx ficha",
+               '<span class="cx"></span><span class="rotop">' + MOCHILA[k].n +
+               '</span><span class="ft"></span>');
+    b.setAttribute("aria-label", MOCHILA[k].n);
+    b.setAttribute("data-qa", "mc-" + id + "-" + k);
+    bts[k] = b;
+    b.onclick = function(){
+      if(ST.resp[id]) return;
+      sPasso(); falar("moc_" + k);
+      if(marcadas[k]){ delete marcadas[k]; b.className = "lx ficha";
+                       b.querySelector(".cx").textContent = ""; }
+      else { marcadas[k] = 1; b.className = "lx ficha marcada";
+             b.querySelector(".cx").textContent = "X"; }
+    };
+    cx.appendChild(b);
+  });
+  box.appendChild(cx);
+  function revela(){
+    var kk;
+    for(kk in bts){
+      bts[kk].className = "lx ficha " + (MOCHILA[kk].inc ? "certa" : "erroficha");
+      if(MOCHILA[kk].inc) bts[kk].querySelector(".cx").textContent = "X";
+    }
+  }
+  var bt = el("button", "bt pronto", "Conferir");
+  bt.setAttribute("data-qa", "conferir-" + id);
+  bt.onclick = function(){
+    if(ST.resp[id]) return;
+    var erro = 0, kk;
+    for(kk in bts) if(!!MOCHILA[kk].inc !== !!marcadas[kk]) erro++;
+    if(erro){
+      for(kk in bts) if(marcadas[kk] && !MOCHILA[kk].inc) bts[kk].className = "lx ficha errada";
+      setTimeout(function(){ var g; for(g in bts) if(marcadas[g]) bts[g].className = "lx ficha marcada"; }, 900);
+      errou(id, "dica" + pi);
+      return;
+    }
+    revela(); bt.style.display = "none";
+    acertou(id, "certo" + pi);
+  };
+  if(ST.resp[id]){ revela(); bt.style.display = "none"; }
+  box.appendChild(bt);
+  fechaItem(d, box, id);
+}
+
+/* ============ 16 — THE DELICIOUS LITTLE HOUSE ============
+   Da d26 (iSLCollective), VERBATIM: *"3. - Look at the menu and complete the
+   conversation with a question from the box."* — e o cardápio, com os preços,
+   é o dela.
+   ⭐ AQUI A CRIANÇA NÃO PREENCHE UMA PALAVRA: ela escolhe a PERGUNTA inteira.
+      É um degrau diferente — em vez de saber qual quantificador cabe na lacuna,
+      ela tem de saber o que se pergunta para chegar àquela resposta. É o
+      caminho de trás para frente, como na folha 17.
+   ⚠️ A caixa de perguntas da folha de papel veio cortada na colheita, então as
+      quatro perguntas são minhas, montadas sobre o cardápio dela. Declarado. */
+function f16(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  var cab = el("div", "enunlin");
+  cab.appendChild(el("div", "ajuda", CARDAPIO.titulo));
+  cab.appendChild(botaoSom("Ouvir o cardápio", function(){ falar("menu_" + CARDAPIO.k); }));
+  d.appendChild(cab);
+  d.appendChild(el("div", "textao", CARDAPIO.corpo));
+  enunciado(d, pi, "Esta é a <b>resposta</b> do garçom. Qual foi a " +
+            "<b>pergunta</b>?", "p" + pi + "enun");
+  ST.folha["p" + pi].forEach(function(qk, i){
+    var P = CARDAPIO.perg[parseInt(qk.slice(1), 10)];
+    if(!P) return;
+    var id = "n" + pi + "_" + i, box = item(i + 1);
+    var lin = el("div", "enunlin");
+    lin.appendChild(el("div", "frasel", P.q));
+    lin.appendChild(botaoSom("Ouvir a resposta", function(){ falar("menq_" + i); }));
+    box.appendChild(lin);
+    var lista = P.o.map(function(w, x){
+      return {v: "o" + x, rot: w, aria: w, fala: "menr_" + i + "_" + x};
+    });
+    opcoes(box, pi, id, lista, "o" + P.r, "pal",
+           "certo" + pi + "_" + i, "dica" + pi + "_" + i,
+           function(){ var x2 = el("div", "ajuda");
+                       x2.appendChild(nomeSecreto(P.pq, id)); box.appendChild(x2); });
+    fechaItem(d, box, id);
+  });
+}
+
+/* ============ 23 — ESCOLHA ENTRE QUATRO ============
+   Da b09 (7esl), VERBATIM: *"Choose the correct relative pronoun to complete
+   the sentences."*, com quatro alternativas em cada.
+   ⭐ É O FORMATO DE PROVA que o aluno de 8º ano vai encontrar — e o distrator é
+      o que ensina: `whose` aparece em todas as quatro alternativas de todas as
+      questões, obrigando a pensar em posse a cada vez.
+   ⭐ E A QUESTÃO DO `that` É DELA, não minha: no item c4 as alternativas são
+      that, where, whose e when — `which` não está entre elas, e `that` é a
+      única possível. Terceira medição do `that` neste caderno, todas em
+      lugares em que ele não admite discussão. */
+function f23(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Agora são <b>quatro</b> opções. Só uma cabe.",
+            "p" + pi + "enun");
+  ST.folha["p" + pi].forEach(function(k, i){
+    var C = QUIZ[k], id = "n" + pi + "_" + i, box = item(i + 1);
+    var lin = el("div", "enunlin");
+    lin.appendChild(el("div", "frasel",
+      C.f.replace("___", '<i class="lacuna"></i>')));
+    lin.appendChild(botaoSom("Ouvir a frase", function(){ falar("quiz_" + k); }));
+    box.appendChild(lin);
+    var lista = C.o.map(function(w){
+      return {v: w, rot: w, aria: w, fala: "op_" + w};
+    });
+    opcoes(box, pi, id, lista, C.r, "pal",
+           "certo" + pi + "_" + k, "dica" + pi + "_" + k);
+    fechaItem(d, box, id);
+  });
+}
+
+/* ============ 24 — BRITISH THINGS ============
+   Da b07 (eslprintables), VERBATIM: *"Fill in the correct relative pronouns."*
+   ⭐ A ÚNICA DAS 54 FOLHAS COM CONTEÚDO CULTURAL DE VERDADE, e o currículo de
+      Blumenau tem um eixo inteiro pedindo isso (DIMENSÃO INTERCULTURAL:
+      *"Construir repertório cultural por meio do"* contato com manifestações
+      artístico-culturais vinculadas à Língua Inglesa). Frase de gramática que
+      também conta quem foi Guy Fawkes vale por duas.
+   ⭐ E O ITEM `e3` É O CASO CLÁSSICO DO `that`: depois de um superlativo (*the
+      most famous novel*) o inglês pede `that`, e `which` soa errado. Quarta e
+      última medição do `that` no caderno. */
+function f24(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Coisas da Inglaterra. Qual pronome cabe em cada frase?",
+            "p" + pi + "enun");
+  ST.folha["p" + pi].forEach(function(k, i){
+    var C = CULTURA[k], id = "n" + pi + "_" + i, box = item(i + 1);
+    var lin = el("div", "enunlin");
+    lin.appendChild(el("div", "frasel",
+      C.f.replace("___", '<i class="lacuna"></i>')));
+    lin.appendChild(botaoSom("Ouvir a frase", function(){ falar("cult_" + k); }));
+    box.appendChild(lin);
+    opcoes(box, pi, id,
+           baralha([{v: "who", rot: "who", aria: "who", fala: "op_who"},
+                    {v: "which", rot: "which", aria: "which", fala: "op_which"},
+                    {v: "whose", rot: "whose", aria: "whose", fala: "op_whose"},
+                    {v: "that", rot: "that", aria: "that", fala: "op_that"}]),
+           C.r, "pal", "certo" + pi + "_" + k, "dica" + pi + "_" + k);
+    fechaItem(d, box, id);
+  });
+}
+
+/* ============ 25 — AS DUAS METADES ============
+   As frases são as da b18 (eslforums), VERBATIM, cortadas ao meio.
+   ⭐⭐ É O DEGRAU QUE FALTAVA ANTES DE JUNTAR. Nas folhas 19 a 24 a criança
+      escolhe uma palavra dentro de uma frase pronta; na 30 ela monta a frase
+      inteira. Entre as duas coisas há um salto, e esta folha é a ponte: a frase
+      já vem partida no lugar certo, e o que ela faz é ver que a metade de cima
+      (*the woman who called you*) só se completa com uma metade de baixo.
+   ⚠️ O CORTE É SEMPRE NO FIM DA ORAÇÃO RELATIVA, e é isso que a folha ensina
+      sem dizer: a oração fica GRUDADA no nome que explica, e o resto da frase
+      principal vem depois dela. */
+function f25(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Cada frase foi cortada ao meio. Toque no <b>começo</b> e " +
+            "depois no <b>fim</b> dela.", "p" + pi + "enun");
+  var grupo = ST.folha["p" + pi][0];
+  var pares = grupo.map(function(k){
+    return {k: k,
+            esq: '<span class="rotop">' + METADES[k].a + "</span>",
+            dir: METADES[k].b,
+            ariaE: METADES[k].a, ariaD: METADES[k].b,
+            fe: "mete_" + k, fd: "metd_" + k,
+            fc: "certo" + pi + "_" + k, dica: "dica" + pi + "_" + k};
+  });
+  var cx = el("div", "");
+  montaLigar(cx, pi, "g0", pares, d);
+  d.appendChild(cx);
+}
+
+/* ============ 28 — ACHE A ORAÇÃO INTEIRA ============
+   Degrau da b18, cujo comando é *"Underline the relative pronoun in each
+   sentence"*.
+   ⭐ NA FOLHA 19 ELA ACHA O PRONOME; AQUI, A ORAÇÃO TODA. É a diferença entre
+      ver a dobradiça e ver a porta: o pronome sozinho não explica nada — o que
+      explica o nome é tudo o que vem depois dele, até a frase principal voltar.
+      Sem este degrau, "juntar duas frases" vira decorar uma fórmula.
+   ⭐ E É A IDEIA DO MARCOS EM AÇÃO (*"repetir o mesmo exercício em duas folhas,
+      claro questões diferentes"*) com a condição da casa por cima: a segunda
+      folha do par SOBE — não é a mesma tarefa com outras frases.
+   ⚠️ A RESPOSTA DECLARADA SÃO AS POSIÇÕES das palavras, não as palavras: numa
+      frase com `is` duas vezes, contar por palavra faria a folha fechar com a
+      segunda ainda por marcar (lição paga na Fábrica de Nomes, no "joão"). */
+function f28(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Toque em <b>todas</b> as palavras da parte que " +
+            "<b>explica</b> — do pronome até onde ela acaba.", "p" + pi + "enun");
+  ST.folha["p" + pi].forEach(function(k, i){
+    var O = ORACAO[k], id = "n" + pi + "_" + i, box = item(i + 1);
+    var certas = [], n;
+    for(n = O.de; n <= O.ate; n++) certas.push("w" + n);
+    registra(id, pi, certas.join(" "));
+    var lin = el("div", "enunlin");
+    lin.appendChild(el("div", "ajuda", "Comece pelo pronome."));
+    lin.appendChild(botaoSom("Ouvir a frase", function(){ falar("orac_" + k); }));
+    box.appendChild(lin);
+    var cx = el("div", "textinho"), faltam = certas.length, achadas = {};
+    O.palavras.forEach(function(w, x){
+      var dentro = (x >= O.de && x <= O.ate);
+      var b = el("button", "tp", w);
+      b.setAttribute("aria-label", w);
+      b.setAttribute("data-qa", (dentro ? "op-" + id + "-w" + x : "no-" + id + "-" + x));
+      if(ST.resp[id] && dentro) b.className = "tp achada";
+      b.onclick = function(){
+        if(ST.resp[id] || achadas[x]) return;
+        sPasso();
+        if(dentro){
+          achadas[x] = 1; b.className = "tp achada"; faltam--;
+          if(!faltam) acertou(id, "certo" + pi + "_" + k);
+        } else {
+          b.className = "tp nao";
+          setTimeout(function(){ b.className = "tp"; }, 420);
+          errou(id, "dica" + pi + "_" + k);
+        }
+      };
+      cx.appendChild(b);
+      cx.appendChild(document.createTextNode(" "));
+    });
+    box.appendChild(cx);
+    fechaItem(d, box, id);
+  });
+}
+
+/* ============ 29 — A ANATOMIA DA FRASE ============
+   Da b16 (iSLCollective), VERBATIM: a tabela de quatro colunas *"Part of a main
+   clause | Rel Pronoun | Part of a Relative Clause | Part of the main clause"*,
+   com as frases dela (*A man | who/that | has the smallest pleasures | is the
+   richest*).
+   ⭐⭐ ESTA TABELA É A MELHOR EXPLICAÇÃO DAS 54 FOLHAS do que é um período
+      composto por subordinação — ela DESMONTA a frase em peças e mostra que a
+      oração relativa se enfia no MEIO da principal. Nenhuma outra folha faz
+      isso; todas tratam a relativa como um rabo no fim.
+   ⚠️ TRÊS GAVETAS E NÃO QUATRO: a folha separa a principal em duas colunas (o
+      que vem antes e o que vem depois da relativa). Para a criança as duas são
+      a mesma coisa — a frase principal — e a distinção que importa é a outra. */
+function f29(d, pi){ gavetas(d, pi, "anat",
+  "Estas frases foram desmontadas em pedaços. Ponha cada pedaço na gaveta dele."); }
+
+/* ============ 31 — AGORA NO MEIO DA FRASE ============
+   Da b10 (iSLCollective), VERBATIM: *"Write one sentence using a relative
+   pronoun:"*; e da b06, *"C. Join the two sentences into one."*
+   ⭐ COLADA NA 30, E COM UM DEGRAU SÓ — é a estratégia que o Marcos propôs
+      (*"repetir o mesmo exercício em duas folhas, claro questões diferentes"*)
+      com a condição da casa por cima: aqui a oração relativa entra no MEIO da
+      frase principal, entre vírgulas. Na 30 ela entrava no fim, que é o lugar
+      fácil.
+   ⭐ E É AQUI QUE A VÍRGULA GANHA SENTIDO antes de a folha 32 cobrá-la: a
+      criança monta cinco frases com a relativa entre vírgulas e depois
+      descobre, escrevendo, que ali nunca cabe `that`. */
+function f31(d, pi){
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "De novo, junte as duas — mas agora a parte que explica " +
+            "entra <b>no meio</b>.", "p" + pi + "enun");
+  ST.folha["p" + pi].forEach(function(k, i){
+    var Y = JUNTA2[k], id = "n" + pi + "_" + i, box = item(i + 1);
+    var lin = el("div", "enunlin");
+    lin.appendChild(el("div", "frasel", Y.a + " &nbsp;+&nbsp; " + Y.b));
+    lin.appendChild(botaoSom("Ouvir as duas frases", function(){ falar("jun2_" + k); }));
+    box.appendChild(lin);
+    var mostra = el("div", "montada"), feito = "";
+    mostra.appendChild(nomeSecreto(Y.pedacos.join(" "), id));
+    registra(id, pi, Y.pedacos.map(function(p){ return chaveQuadro(p); }).join(" "));
+    var linha = el("div", "ops"), passo = 0, bts = [];
+    baralha(Y.pedacos.map(function(p, x){ return x; })).forEach(function(x){
+      var p = Y.pedacos[x];
+      var b = el("button", "op sil frase", p);
+      b.setAttribute("aria-label", "Pedaço " + p);
+      b.setAttribute("data-qa", "op-" + id + "-" + chaveQuadro(p));
+      bts.push(b);
+      b.onclick = function(){
+        if(ST.resp[id]) return;
+        sPasso();
+        if(passo === x){
+          b.className = "op sil frase usada";
+          feito += (feito ? " " : "") + p; passo++;
+          mostra.setAttribute("data-feito", feito);
+          if(passo >= Y.pedacos.length) acertou(id, "certo" + pi + "_" + k);
+        } else {
+          b.className = "op sil frase erro";
+          setTimeout(function(){ b.className = "op sil frase"; }, 500);
+          errou(id, "dica" + pi + "_" + k);
+        }
+      };
+      linha.appendChild(b);
+    });
+    if(ST.resp[id]) bts.forEach(function(b){ b.className = "op sil frase usada"; });
+    box.appendChild(mostra); box.appendChild(linha);
+    fechaItem(d, box, id);
+  });
 }

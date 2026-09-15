@@ -458,38 +458,17 @@ button{font-family:inherit;cursor:pointer}
 #menuProf .folhas{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 #menuProf .folhas button{min-height:46px;border:0;border-radius:12px;background:#f4ebe3;color:#57493f;font-weight:800;
   font-size:14px;padding:8px 12px;box-shadow:0 3px 0 #ddd0c4;flex:1 1 150px;text-align:left}
-#teclado{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:3px solid var(--cor);padding:8px;display:none}
-#teclado.aberto{display:block}
-#teclado .dica{text-align:center;font-weight:800;color:var(--cor2);font-size:13px;margin-bottom:6px}
-#tk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:560px;margin:0 auto}
-#tk button{min-height:48px;border:0;border-radius:12px;background:#f4ebe3;color:var(--texto);font-weight:900;font-size:19px;box-shadow:0 3px 0 #ddd0c4}
-#tk button:active{transform:translateY(2px);box-shadow:0 1px 0 #ddd0c4}
-#tk button.ap{background:#fde2da;grid-column:span 3}
-#tk button.ok{background:#d9f2e3;grid-column:span 4}
-/* ⚠️ O TECLADO FICOU MAIOR (15/set/2026): eram 29 teclas e passaram a ser 39,
-   porque faltavam K, W, Y e os acentos — sem eles a criança não conseguia
-   escrever PÊSSEGO e a folha nunca fechava. Com 39 teclas em 7 colunas, num
-   celular de 320 px a tecla caía para 38 px de lado, abaixo do piso de 40 px
-   da casa (medido, não suposto). Aqui a folga aperta e o alvo volta a 40. */
-@media(max-width:380px){
-  #teclado{padding:6px}
-  #tk{gap:4px}
-  #tk button{min-height:44px;font-size:17px}
-}
-/* ⚠️⚠️ O TECLADO TAPAVA A ATIVIDADE — o Marcos viu no celular (15/set/2026):
-   "ele preenche a tela e não dá para ver a atividade". Medido: na cruzadinha de
-   360x640 o teclado ocupava 368 px de 640 (58% da tela) e a grade ficava
-   INTEIRA por baixo dele. Duas coisas consertam isso, e são independentes:
-   1. aqui, o teclado encolhe na tela BAIXA (celular deitado, monitor velho da
-      escola) — a tecla continua com 40 px de lado, que é o piso da casa;
-   2. no `abreCruz` do folhas.js, a palavra que está sendo escrita ROLA para a
-      faixa que sobra ACIMA do teclado. Sem a 2, encolher só adia o problema. */
-@media(max-height:760px){
-  #teclado .dica{margin-bottom:3px;font-size:12px}
-  #tk button{min-height:40px;font-size:16px}
-}
-/* enquanto o teclado está aberto, a página ganha chão para poder rolar */
-body.comtec{padding-bottom:460px;padding-bottom:var(--tech,460px)}
+/* ============================================================
+   O CAMPO QUE CHAMA O TECLADO DO APARELHO.
+   Ele mora EM CIMA da grade de casinhas e é praticamente invisível — mas
+   continua sendo um campo de verdade, porque campo escondido não recebe foco
+   e sem foco o teclado do celular não abre.
+   ============================================================ */
+#tecIn{position:absolute;z-index:5;border:0;background:transparent;color:transparent;
+  caret-color:transparent;opacity:.01;font-size:16px;padding:0;margin:0;outline:0;
+  -webkit-appearance:none;appearance:none}
+#tecIn:focus{outline:0}
+.cruz{position:relative}
 #confete{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
 .cf{position:absolute;width:9px;height:14px;opacity:.95;-webkit-animation:cai 1.5s linear forwards;animation:cai 1.5s linear forwards}
 @-webkit-keyframes cai{to{transform:translateY(105vh) rotate(560deg);opacity:0}}
@@ -755,10 +734,7 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
   </div>
 </div>
 
-<div id="teclado" aria-label="Teclado de letras">
-  <div class="dica" id="tkDica">Escreva a palavra</div>
-  <div id="tk"></div>
-</div>
+
 <div id="confete" aria-hidden="true"></div>
 
 <script>

@@ -343,79 +343,37 @@ var CRUZ = null;
       O `node --check` não vê isso (a sintaxe está perfeita); quem vê é o
       `_qa/funcoes.py`, o portão "função que não existe" — que eu não rodei. */
 function rolaParaCruz(){
-  /* de quem é a vez: a fila da cruzadinha, ou a quadra única do outro teclado */
-  /* ⚠️⚠️ LÊ AS DUAS PELO `window`, e isto NÃO é preciosismo: escrito como
-     `typeof CRUZ !== "undefined" && CRUZ && CRUZ.E`, o `CRUZ` nu depois do `&&`
-     é acusado de `'CRUZ' is not defined` pelo ESLint nos cadernos que não têm
-     cruzadinha (ele não faz análise de fluxo, e o `typeof` só protege a
-     primeira ocorrência). E esse ESLint é o portão 0a2 que roda DENTRO do
-     `entregar.yml`, antes de publicar: com ele vermelho, NADA sobe. Foi assim
-     que quatro publicações minhas falharam seguidas hoje, sem eu entender por
-     quê — e o pré-voo daqui não pega, porque o ESLint não está instalado no
-     container. Como `CRUZ` e `ATIVA` são `var` globais, elas são propriedades
-     de `window`, e ler por ali funciona igual e é declarado. */
-  var cs = [], i, andando = 0;
-  var _cruz = window.CRUZ, _ativa = window.ATIVA;
-  if(_cruz && _cruz.E && _cruz.E.cels){
-    for(i = 0; i < _cruz.E.cels.length; i++)
-      if(_cruz.E.cels[i] && _cruz.E.cels[i].getBoundingClientRect) cs.push(_cruz.E.cels[i]);
-    andando = _cruz.val ? _cruz.val.length : 0;
-  } else if(_ativa && _ativa.q && _ativa.q.getBoundingClientRect){
-    cs.push(_ativa.q);
-  }
-  if(!cs.length) return;
-  var tkel = document.getElementById("teclado");
-  if(!tkel || tkel.className.indexOf("aberto") < 0) return;
-  var tk = tkel.getBoundingClientRect(), topo = 56, pe = tk.top - 10;
-  /* ⚠️ A RESERVA DE ROLAGEM SAI DA ALTURA REAL DO TECLADO, e não de um
-     número fixo. Ela nasceu como `padding-bottom:460px` no `comtec`, que
-     é certo para o teclado de LETRAS (336 px medidos a 360x640, 41
-     teclas) e exagerado para o de NÚMEROS (160 px, 12 teclas): sobravam
-     300 px de vazio para a criança rolar à toa enquanto digita. Como o
-     `comtec` sai da tag `body` ao fechar, a variável pode ficar guardada
-     sem fazer mal nenhum. */
-  document.documentElement.style.setProperty("--tech", Math.ceil(tk.height + 40) + "px");
-  if(pe <= topo) return;
-  var cima = 1e9, baixo = -1e9;
-  for(i = 0; i < cs.length; i++){
-    var r = cs[i].getBoundingClientRect();
-    if(r.top < cima) cima = r.top;
-    if(r.bottom > baixo) baixo = r.bottom;
-  }
-  var d = 0;
-  if(baixo - cima <= pe - topo){
-    if(baixo > pe) d = baixo - pe;
-    if(cima - d < topo) d = cima - topo;
-  } else {
-    var at = cs[Math.min(andando, cs.length - 1)].getBoundingClientRect();
-    d = at.top - (topo + (pe - topo) / 2 - at.height / 2);
-  }
-  if(Math.abs(d) > 2) window.scrollBy(0, d);
+  /* ⚠️ VAZIA DE PROPÓSITO, e ela fica aqui em vez de sumir. Enquanto o
+     teclado era uma barra fixa nossa, esta função levava a palavra para
+     a faixa que sobrava acima dele. Agora quem abre é o teclado do
+     aparelho, e o navegador já rola a página sozinho para o campo com
+     foco. Apagá-la quebraria as chamadas que ainda existem por aí. */
 }
 function abreCruz(E, pi){
+  /* ⚠️ SEM BARRA FIXA, SEM ROLAGEM FORÇADA. O teclado da casa era fixo no pé da
+     tela e tapava a palavra que a criança escrevia — daí existir o `comtec` e o
+     `rolaParaCruz`. Agora quem abre é o teclado do APARELHO, que o próprio
+     navegador já trata: ele rola a página para deixar o campo com foco à vista.
+     Foi por isso que as duas peças saíram daqui juntas. */
   if(CRUZ) fechaCruz();
   CRUZ = {E: E, val: "", pi: pi};
   if(E.bt) E.bt.className = E.bt.className.indexOf("oculta") > -1 ? "pista oculta" : "pista ativa";
   pintaCruz();
-  document.getElementById("teclado").className = "aberto";
-  /* ⚠️ ROLAR A PALAVRA PARA CIMA DO TECLADO. Sem isto a criança escreve às
-     cegas: o teclado é fixo no pé da tela e a grade fica embaixo dele (medido
-     em 360x640: a grade inteira por baixo). O `comtec` dá chão para a página
-     poder rolar; o resto é levar a primeira casinha para a faixa que sobra. */
-  document.body.className = (document.body.className.replace(/ ?comtec/, "") + " comtec").replace(/^ /, "");
-  setTimeout(rolaParaCruz, 60);
-  document.getElementById("tkDica").textContent = E.rot || ("Escreva a palavra da pista " + E.n);
+  var grade = E.cels && E.cels[0] ? E.cels[0].parentNode : null;
+  var c = poeCampoSobre(grade);
+  c.value = "";
+  c.setAttribute("maxlength", String(E.aceita ? E.cels.length : E.w.length));
+  c.setAttribute("aria-label", E.rot || "Escreva a palavra");
+  try{ c.focus({preventScroll: false}); }catch(e){ c.focus(); }
   falar("escreva");
 }
 function fechaCruz(){
   if(!CRUZ) return;
   var E = CRUZ.E;
-  if(!ST.resp[E.id]){
-    E.cels.forEach(function(c){ if(c){ var n = c.querySelector(".cn"); c.textContent = ""; if(n) c.appendChild(n); c.className = "ccel viva"; } });
-    if(E.bt) E.bt.className = E.bt.className.indexOf("oculta") > -1 ? "pista oculta" : "pista";
-  }
-  CRUZ = null; document.getElementById("teclado").className = "";
-  document.body.className = document.body.className.replace(/ ?comtec/, "");
+  if(E.bt) E.bt.className = E.bt.className.indexOf("oculta") > -1 ? "pista oculta" : "pista";
+  CRUZ = null;
+  if(TECIN){ TECIN.value = ""; try{ TECIN.blur(); }catch(e){} }
+  pintaCruz();
 }
 function pintaCruz(){
   var E = CRUZ.E, v = CRUZ.val;
@@ -437,10 +395,31 @@ function digitaCruz(ch){
   pintaCruz(); rolaParaCruz();
   if(CRUZ.val.length >= E.w.length) setTimeout(confereCruz, 380);
 }
+/* ⚠️⚠️ O ACENTO NÃO PODE REPROVAR QUEM ACERTOU A PALAVRA (ordem do Marcos,
+   15/set/2026, com a turma na sala: *"faça que tanto com o sem dê certo"*).
+   O gabarito de BACTERIAS estava sem acento e o teclado da tela TEM os acentos:
+   a criança que escrevia BACTÉRIAS — que é o certo em português — era recusada,
+   e ficava olhando para uma palavra certa marcada como errada. O contrário
+   também acontecia, em caderno cujo gabarito vinha acentuado.
+   ⚠️ E ONDE O ACENTO É O CONTEÚDO, ele continua contando: a folha declara
+      `exigeAcento` e aí a comparação é letra por letra, acento incluído. */
+function semAcento(s){
+  s = String(s || "").toUpperCase();
+  var de = "ÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇ", para = "AAAAAEEEEIIIIOOOOOUUUUC", i, o = "";
+  for(i = 0; i < s.length; i++){
+    var n = de.indexOf(s.charAt(i));
+    o += n > -1 ? para.charAt(n) : s.charAt(i);
+  }
+  return o;
+}
+function mesmaPalavra(a, b, exigeAcento){
+  if(exigeAcento) return String(a).toUpperCase() === String(b).toUpperCase();
+  return semAcento(a) === semAcento(b);
+}
 function confereCruz(){
   if(!CRUZ || !CRUZ.val) return;
   var E = CRUZ.E, pi = CRUZ.pi;
-  if(CRUZ.val === E.w){
+  if(mesmaPalavra(CRUZ.val, E.w, E.exigeAcento)){
     E.cels.forEach(function(c, i){
       if(!c) return;
       var n = c.querySelector(".cn");
@@ -448,8 +427,8 @@ function confereCruz(){
       c.className = "ccel viva ok";
     });
     if(E.bt) E.bt.className = E.bt.className.indexOf("oculta") > -1 ? "pista oculta" : "pista feita";
-    CRUZ = null; document.getElementById("teclado").className = "";
-  document.body.className = document.body.className.replace(/ ?comtec/, "");
+    CRUZ = null;
+    if(TECIN){ TECIN.value = ""; try{ TECIN.blur(); }catch(e){} }
     acertou(E.id, "certo" + pi + "_" + E.k);
   } else {
     CRUZ.val = ""; pintaCruz();
@@ -556,20 +535,64 @@ function montaLigar(caixa, pi, tag, pares, pagina){
    além de teclar no teclado virtual funcionasse se ele tocasse no teclado de
    verdade, as duas opções"*. No PC da escola tem teclado e a criança vai
    digitar; no celular, não tem. Nunca só uma porta. */
-(function(){
-  var tk = document.getElementById("tk");
-  var letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÃÉÊÍÓÔÕÚÜÇ".split("");
-  letras.forEach(function(L){
-    var b = el("button", null, L);
-    b.setAttribute("aria-label", "Letra " + L);
-    b.onclick = function(){ digitaCruz(L); };
-    tk.appendChild(b);
+/* ============================================================
+   O TECLADO DO APARELHO — substitui o teclado de 41 teclas da casa.
+
+   ⭐ ORDEM DO MARCOS (15/set/2026): *"pode remover o teclado das atividades,
+      melhor digitar com teclado normal"*. O nosso ocupava 53% de um celular de
+      640 px, e mesmo redistribuído para 4 fileiras ainda comia 40%.
+
+   ⚠️ O QUE ELE RESOLVE E O QUE NÃO RESOLVE, dito por inteiro: no PC da escola o
+      teclado físico já funcionava (as duas portas são regra da casa desde
+      ago/2026) — o campo abaixo não muda nada lá. Ele existe pelo CELULAR, que
+      não tem teclado físico: sem um campo de verdade para focar, o aparelho não
+      abre teclado nenhum e a criança fica trancada.
+   ============================================================ */
+var TECIN = null;
+function campoTeclado(){
+  if(TECIN) return TECIN;
+  TECIN = document.createElement("input");
+  TECIN.id = "tecIn";
+  TECIN.type = "text";
+  TECIN.setAttribute("autocomplete", "off");
+  TECIN.setAttribute("autocorrect", "off");
+  TECIN.setAttribute("autocapitalize", "characters");
+  TECIN.setAttribute("spellcheck", "false");
+  TECIN.setAttribute("aria-label", "Escreva a palavra");
+  TECIN.setAttribute("inputmode", "text");
+  /* ⚠️ O EVENTO É `input`, NÃO `keydown`: no celular o teclado do sistema não
+     dispara keydown com a letra (ele "compõe" o texto), e um caderno que só
+     ouvisse keydown seria mudo justamente no aparelho para o qual este campo
+     existe. */
+  TECIN.addEventListener("input", function(){
+    if(!CRUZ) return;
+    var v = (TECIN.value || "").toUpperCase();
+    var teto = CRUZ.E.aceita ? CRUZ.E.cels.length : CRUZ.E.w.length;
+    if(v.length > teto) v = v.slice(0, teto);
+    CRUZ.val = v; TECIN.value = v;
+    pintaCruz();
+    if(!CRUZ.E.aceita && CRUZ.val.length >= CRUZ.E.w.length) setTimeout(confereCruz, 380);
   });
-  var ap = el("button", "ap", "apagar"); ap.setAttribute("aria-label", "Apagar");
-  ap.onclick = function(){ digitaCruz("ap"); }; tk.appendChild(ap);
-  var ok = el("button", "ok", "OK"); ok.setAttribute("aria-label", "Confirmar");
-  ok.onclick = function(){ digitaCruz("ok"); }; tk.appendChild(ok);
-})();
+  TECIN.addEventListener("keydown", function(ev){
+    if(ev.key === "Enter"){ ev.preventDefault(); confereCruz(); }
+    else if(ev.key === "Escape"){ fechaCruz(); }
+  });
+  TECIN.addEventListener("blur", function(){
+    /* sair do campo não perde o que já foi escrito — só fecha a caneta */
+    setTimeout(function(){ if(CRUZ && document.activeElement !== TECIN) fechaCruz(); }, 120);
+  });
+  document.body.appendChild(TECIN);
+  return TECIN;
+}
+function poeCampoSobre(grade){
+  var c = campoTeclado();
+  if(grade && grade.parentNode){
+    if(c.parentNode !== grade) grade.appendChild(c);
+    c.style.left = "0"; c.style.top = "0";
+    c.style.width = "100%"; c.style.height = "100%";
+  }
+  return c;
+}
 document.addEventListener("keydown", function(ev){
   if(!CRUZ) return;
   if(document.activeElement && document.activeElement.id === "nomeIn") return;

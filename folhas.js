@@ -209,17 +209,24 @@ function monta(){
       `img()` de outra atividade: o app abria com um quadradinho vazio e um 404
       no console, e nenhum portão de texto viu. */
 function f0(d){
-  var c = el("div", "capa"), nome = "Lost & Found — o balcao dos achados e perdidos", k, letras = "";
-  for(k = 0; k < nome.length; k++){
-    var ch = nome.charAt(k);
-    letras += ch === " " ? '<span class="esp"></span>'
-      : '<span class="lt" style="animation-delay:' + (0.04 * k).toFixed(2) + 's">' + ch + '</span>';
-  }
+  /* CAPA COM IDENTIDADE PRÓPRIA — gerada por _padrao/identidade_capa.py (editar lá).
+     Cena: o balcão de achados e perdidos com as etiquetas penduradas balançando. O título entra letra a letra (desliza), palavra por palavra
+     (nowrap, para não quebrar no meio); as figuras são as do próprio caderno. */
+  var c = el("div", "capa"), nome = "Lost & Found — o balcão dos achados e perdidos", k, letras = "", pos = 0;
+  var V = typeof VIMG !== "undefined" ? VIMG : 2;
+  nome.split(" ").forEach(function(pal, w){
+    var s = "";
+    for(k = 0; k < pal.length; k++, pos++){
+      s += '<span class="lt" style="animation-delay:' + (0.05 * pos).toFixed(2) + 's">' + pal.charAt(k) + '</span>';
+    }
+    pos++;
+    letras += (w ? '<span class="cpesp"></span>' : '') + '<span class="cptpal">' + s + '</span>';
+  });
   c.innerHTML =
-    '<div class="ceu"><i class="nv n1"></i><i class="nv n2"></i><i class="nv n3"></i><i class="sol"></i></div>' +
-    '<h1 class="titu">' + letras + '</h1>' +
+    '<div class="ceu"></div>' + '<h1 class="titu">' + letras + '</h1>' +
     '<div class="sub">Inglês &middot; 8º ano &middot; 35 folhas de some, any, much, many e os pronomes who, which, that e whose</div>' +
-    '<div class="chamada">Você vai atender o balcão de <b>achados e perdidos</b> de um aeroporto. Escreva o seu nome ali embaixo e toque em <b>Começar</b>.</div>';
+    '<div class="cpbarra"></div><div class="cena">' + '<div class="it" style="animation-delay:0.00s">' + '<i class="fio"></i><img class="capfig" draggable="false" src="img/lf_suitcase.png?v=' + V + '" alt="">' + '' + '</div>' + '<div class="it" style="animation-delay:0.35s">' + '<i class="fio"></i><img class="capfig" draggable="false" src="img/lf_mouse.png?v=' + V + '" alt="">' + '' + '</div>' + '<div class="it" style="animation-delay:0.70s">' + '<i class="fio"></i><img class="capfig" draggable="false" src="img/lf_tea.png?v=' + V + '" alt="">' + '' + '</div>' + '<div class="it" style="animation-delay:1.05s">' + '<i class="fio"></i><img class="capfig" draggable="false" src="img/lf_music.png?v=' + V + '" alt="">' + '' + '</div>' + '</div>' + '<div class="balcao">LOST &amp; FOUND</div>' +
+    '<div class="chamada">Escreva o seu nome ali embaixo e toque em <b>Começar</b>.</div>';
   d.appendChild(c);
 }
 function gavetas(d, pi, gk, pede){
